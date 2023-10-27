@@ -1,3 +1,4 @@
+import copy
 class aStarNode:
     def __init__(self,x,y,time) -> None:
         self.x = x
@@ -25,43 +26,59 @@ class aStar:
         self.costPerStep = 1
         self.getValidNeighbours = graph.findValidNeighbours
 
-        #this version of a star must be able to handle constraints 
-        #TODO need to keep track of the node before 
     def findPath(self,constraints,agent):
         #return path
         startPos = agent.startPos
-
+        nodeCameFrom = {}
         closedSet = set() #in this set items should look like (node,time), (node,time) etc
         openSet = set()
         node = aStarNode(startPos[0],startPos[1],0)
         node.setMovementCost(0)
         node.setTotalCost(self.calculateHeurisitic(agent.goal,node))
-
+        startNode = node
         openSet.add(node) 
 
         while len(openSet) != 0:
             currentNode = self.getLeastCost(openSet)#need to remove from closed set rn
             openSet.remove(currentNode)
-
             closedSet.add(currentNode)
-
-
             neighbours = self.getValidNeighbours(currentNode,constraints) #of what type is neighbour - should be like a node in the graph
             currentTime = currentNode.time +1
             for neighbour in neighbours:
                 neighbourNode = aStarNode(neighbour[0],neighbour[1],currentTime)
                 if self.atGoal(neighbour,agent.goal):
                     #stop search and return path
-                    return
+                    path = self.buildPath(nodeCameFrom,currentNode,startNode)
+                    destNode = aStarNode(agent.goal[0],agent.goal[1],currentTime)
+                    destNode.movementCost = currentNode.movementCost + self.costPerStep
+                    destNode.totalCost = self.calculateHeurisitic(agent.goal,currentNode ) + destNode.movementCost
+                    path.append(destNode)
+                    return path
                 if neighbourNode in openSet or neighbourNode in closedSet: #this is a flawed statement, neighbour is of type list and 
                     continue
                 neighbourNode.movementCost = currentNode.movementCost + self.costPerStep #g = movement cost from start
                 neighbourNode.totalCost= self.calculateHeurisitic(agent.goal,currentNode ) + neighbourNode.movementCost  # movementCost + heuristic  f
                 #neightbourNode = aStarNode(neighbour[0],neighbour[1],currentTime,totalCost, movementCost)
                 openSet.add(neighbourNode)
+                if neighbourNode not in nodeCameFrom:
+                    nodeCameFrom[neighbourNode] = currentNode
                 #need to keep track of path - not sure if that should be done per node or not?
+            remain = copy.deepcopy(currentNode)
+            remain.time = currentTime
+            remain.totalCost = currentNode.totalCost + self.calculateHeurisitic(agent.goal,currentNode)
+            openSet.add(remain)
 
         return False #path does not exist
+    
+    def buildPath(self, cameFrom,current,startPos):
+        path = []
+        path.append(current)
+        while startPos not in path:
+            current = cameFrom[current]
+            path.append(current)
+        path.reverse()    
+        return path
+
     
     def checkIfEquivalentNodeInSet(self,openSet,checkNode):
         for node in openSet:
@@ -86,17 +103,3 @@ class aStar:
 
     def calculateHeurisitic(self,goal,currentNode):
         return abs(currentNode.x - goal[0]) + abs(currentNode.y - goal[1])
-
-"""
-    #will also need to add the manual check of two agents swapping squares - not allowed 
-    def getValidNeighbouringNodes(self,currentNode,constraints):
-        #Constraints should look like (x,y,time)
-        #constraints here will be the ones for the particular agent so won't have to check that
-        time = currentNode.time +1
-
-
-        #CheckUp
-        upCoords = (currentNode.x,currentNode.y-1)
-        if currentNode.y-1 >=0 
-
-        return """""
