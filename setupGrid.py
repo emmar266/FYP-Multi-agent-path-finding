@@ -23,13 +23,11 @@ class graphManger:
         self.graph = graph
 
     def checkValidMovement(self,suggestedMovement,constraints,time):
-        
+        #flaw with constraint check
         if (suggestedMovement[0] >=0 and suggestedMovement[0] < self.graph.width) and (suggestedMovement[1] >=0 and suggestedMovement[1] < self.graph.length):
             if self.graph.floorPlan[suggestedMovement[1]][suggestedMovement[0]] != "Blocked":
-                if tuple(suggestedMovement) in constraints:
-                    if time in constraints[tuple(suggestedMovement)]:
+                if [suggestedMovement[0],suggestedMovement[1],time] in constraints:
                         return False
-                    return True
                 else:
                     return True
         return False

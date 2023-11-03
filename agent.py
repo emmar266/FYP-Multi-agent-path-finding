@@ -3,5 +3,6 @@ class agent:
         self.agentId = agentId
         self.startPos = startPos
         self.goal = goal
+        
 
     
