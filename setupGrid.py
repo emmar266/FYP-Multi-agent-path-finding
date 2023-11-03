@@ -17,6 +17,7 @@ class warehouseFloor:
         for obstacle in obstaclesList:
             self.floorPlan[obstacle[1]][obstacle[0]] = "Blocked"
 
+
 """"""
 class graphManger:
     def __init__(self,graph):
@@ -24,36 +25,50 @@ class graphManger:
 
     def checkValidMovement(self,suggestedMovement,constraints,time):
         #flaw with constraint check
+        dynamic= False
         if (suggestedMovement[0] >=0 and suggestedMovement[0] < self.graph.width) and (suggestedMovement[1] >=0 and suggestedMovement[1] < self.graph.length):
             if self.graph.floorPlan[suggestedMovement[1]][suggestedMovement[0]] != "Blocked":
                 if [suggestedMovement[0],suggestedMovement[1],time] in constraints:
-                        return False
+                        #Idea is to recognise if theres a dynamic block which is passed back to the astar which will either allow waiting at current block
+                        dynamic = True
+                        return False, dynamic
                 else:
-                    return True
-        return False
+                    return True, dynamic
+        return False, dynamic
     
     
     def findValidNeighbours(self, currentNode,constraints):
         time = currentNode.time +1
-
+        dynamic = False
         #should separate into sep functin
         #check up movement
         validNeighbours = []
-        if self.checkValidMovement([currentNode.x, currentNode.y-1],constraints,time):
+        validMovement, dynamicFound = self.checkValidMovement([currentNode.x, currentNode.y-1],constraints,time)
+        if validMovement:
             validNeighbours.append([currentNode.x, currentNode.y-1])
-
+        if dynamicFound:
+            dynamic = True
         #check down movement
-        if self.checkValidMovement([currentNode.x, currentNode.y+1],constraints,time):
+        validMovement, dynamicFound = self.checkValidMovement([currentNode.x, currentNode.y+1],constraints,time)
+        if validMovement:
             validNeighbours.append([currentNode.x, currentNode.y+1])
+        if dynamicFound:
+            dynamic = True
 
         #check left movement
-        if self.checkValidMovement([currentNode.x-1, currentNode.y],constraints,time):
+        validMovement, dynamicFound = self.checkValidMovement([currentNode.x-1, currentNode.y],constraints,time)
+        if validMovement:
             validNeighbours.append([currentNode.x-1, currentNode.y])
+        if dynamicFound:
+            dynamic = True
 
         #check right movement
-        if self.checkValidMovement([currentNode.x+1, currentNode.y],constraints,time):
+        validMovement, dynamicFound = self.checkValidMovement([currentNode.x+1, currentNode.y],constraints,time)
+        if validMovement:
             validNeighbours.append([currentNode.x+1, currentNode.y])
-        return validNeighbours
+        if dynamicFound:
+            dynamic = True
+        return validNeighbours,dynamic
 
 if __name__ =="__main__":
     w = warehouseFloor(4,4)
