@@ -1,8 +1,10 @@
 class node:
     def __init__(self,constraints,cost) -> None:
         self.constraints = constraints
+        self.collisions = []
         self.children = []
-        self.cost = cost
+        self.cost = cost 
+        self.paths = []
     
 
 

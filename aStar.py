@@ -42,8 +42,14 @@ class aStar:
             currentNode = self.getLeastCost(openSet)#need to remove from closed set rn
             openSet.remove(currentNode)
             closedSet.add(currentNode)
-            neighbours = self.getValidNeighbours(currentNode,constraints) #of what type is neighbour - should be like a node in the graph
+            neighbours,dynamic = self.getValidNeighbours(currentNode,constraints) #of what type is neighbour - should be like a node in the graph
             currentTime = currentNode.time +1
+            if dynamic:
+                #add current node to set
+                waitNode = copy.deepcopy(currentNode)
+                waitNode.time = currentTime
+                openSet.add(waitNode)
+                nodeCameFrom[waitNode] = currentNode
             for neighbour in neighbours:
                 neighbourNode = aStarNode(neighbour[0],neighbour[1],currentTime)
                 if self.atGoal(neighbour,agent.goal):
@@ -63,11 +69,6 @@ class aStar:
                 if neighbourNode not in nodeCameFrom:
                     nodeCameFrom[neighbourNode] = currentNode
                 #need to keep track of path - not sure if that should be done per node or not?
-            remain = copy.deepcopy(currentNode)
-            remain.time = currentTime
-            remain.totalCost = currentNode.totalCost + self.calculateHeurisitic(agent.goal,currentNode)
-            openSet.add(remain)
-
         return False #path does not exist
     
     def buildPath(self, cameFrom,current,startPos):
@@ -87,7 +88,7 @@ class aStar:
         return False
 
     def atGoal(self,currentNode,goal):
-        if currentNode[1] == goal[0] and currentNode[0] == goal[1]:
+        if currentNode[0] == goal[0] and currentNode[1] == goal[1]:
             return True
         return False
 
@@ -95,11 +96,11 @@ class aStar:
         minTotalCost = None
         minNode = None
         for node in openSet:
-            if minTotalCost == None or node.totalCost < minTotalCost:
-                minTotalCost = node.totalCost
-                minNode = node    
+            if minTotalCost == None or node.totalCost + node.time < minTotalCost:
+                minTotalCost = node.totalCost + node.time
+                minNode = node  
         return minNode
-    
+
 
     def calculateHeurisitic(self,goal,currentNode):
         return abs(currentNode.x - goal[0]) + abs(currentNode.y - goal[1])
