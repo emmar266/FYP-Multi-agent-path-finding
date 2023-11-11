@@ -96,7 +96,7 @@ class aStar:
         minTotalCost = None
         minNode = None
         for node in openSet:
-            if minTotalCost == None or node.totalCost + node.time < minTotalCost:
+            if minTotalCost == None or node.totalCost + node.time < minTotalCost: # need to reval whether time here is relevant in this if
                 minTotalCost = node.totalCost + node.time
                 minNode = node  
         return minNode
