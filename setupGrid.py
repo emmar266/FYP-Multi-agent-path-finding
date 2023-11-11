@@ -28,7 +28,8 @@ class graphManger:
         dynamic= False
         if (suggestedMovement[0] >=0 and suggestedMovement[0] < self.graph.width) and (suggestedMovement[1] >=0 and suggestedMovement[1] < self.graph.length):
             if self.graph.floorPlan[suggestedMovement[1]][suggestedMovement[0]] != "Blocked":
-                if [suggestedMovement[0],suggestedMovement[1],time] in constraints:
+                suggested = [suggestedMovement[0],suggestedMovement[1],time]
+                if suggested in constraints:
                         #Idea is to recognise if theres a dynamic block which is passed back to the astar which will either allow waiting at current block
                         dynamic = True
                         return False, dynamic
@@ -40,6 +41,10 @@ class graphManger:
     def findValidNeighbours(self, currentNode,constraints):
         time = currentNode.time +1
         dynamic = False
+        if currentNode.x == 3 and currentNode.y ==3 and currentNode.time ==3:
+            print("whlep")
+        if currentNode.x == 3 and currentNode.y ==3 and currentNode.time ==3:
+            print("whlep")
         #should separate into sep functin
         #check up movement
         validNeighbours = []

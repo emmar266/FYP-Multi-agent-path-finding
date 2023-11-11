@@ -126,7 +126,7 @@ class highLevel:
                         #newCollision = Collision(stepAgentOne.x,stepAgentOne.y,stepAgentOne.time,[agent,agent2])
                         newCollision = collision(agent, agent2,[stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
                                                  [stepAgentTwo.x,stepAgentTwo.y,stepAgentTwo.time])
-                        if newCollision not in collisions:
+                        if newCollision not in collisions:#this is not correctly catching duplicates 
                             collisions.append(newCollision)
                         #collison detected
                     if  self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):

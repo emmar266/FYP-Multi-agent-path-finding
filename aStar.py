@@ -48,8 +48,10 @@ class aStar:
                 #add current node to set
                 waitNode = copy.deepcopy(currentNode)
                 waitNode.time = currentTime
-                openSet.add(waitNode)
-                nodeCameFrom[waitNode] = currentNode
+                #
+                if [waitNode.x,waitNode.y,waitNode.time] in constraints:
+                    openSet.add(waitNode)
+                    nodeCameFrom[waitNode] = currentNode
             for neighbour in neighbours:
                 neighbourNode = aStarNode(neighbour[0],neighbour[1],currentTime)
                 if self.atGoal(neighbour,agent.goal):
