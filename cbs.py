@@ -2,19 +2,17 @@ from tree import Tree, node
 import aStar
 import setupGrid
 import copy
+"""
+ToDo:
+When generating paths for all agents should have some sort of way to reuse paths with no new constraints applied
+Change openSet datastructure more heap based - set in python uses hashtable
 
-class Collision:
-    def __init__(self,x,y,time,agentsInvolved) -> None:
-        self.x = x
-        self.y = y
-        self.time = time
-        self.agentsInvolved = agentsInvolved
 
-    def __eq__(self, objectToCompare) -> bool:
-        if self.x == objectToCompare.x and self.y==objectToCompare.y and self.time == objectToCompare.time and set(self.agentsInvolved) == set(objectToCompare.agentsInvolved):
-            return True
-        return False
-    
+Need to know how we deal with nodes that don't return valid paths - do we try repair the path or just abandon it 
+    - I would assume we abandon that node 
+"""
+
+
 class collision:
     def __init__(self,agentOne,agentTwo, conflictOne, conflictTwo) -> None:
         self.agentOne = agentOne
@@ -57,9 +55,8 @@ class highLevel:
             openSet.remove(currentNode)
             #get first conflict 
 
-            #run conflict finder 
-            currentCollisions = self.AlternativecheckForcollsions(currentNode.paths) # list of type collision
-            #based on this collision we want to construct a conflict
+            #run collision finder 
+            currentCollisions = self.checkForcollsions(currentNode.paths)
             if len(currentCollisions) ==0:
                 #no collisions, Valid paths found for all agents
                 return currentNode.paths
@@ -78,14 +75,29 @@ class highLevel:
                     constraints[agent.agentId].append(newConstraint)
                 else:
                     constraints[agent.agentId] = [newConstraint]
-                #run pa th finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
+                #run path finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
                 paths = self.findPathsForAll(constraints)
                 cost = self.calculateNodeCost(paths) 
                 childNode = node(constraints, cost)
                 childNode.paths = paths
-                currentNode.children.append(childNode)
+                if currentNode.left is None:
+                    currentNode.setLeftChild(childNode)
+                else:
+                    currentNode.setLeftChild(childNode)
+                #currentNode.children.append(childNode)
                 openSet.add(childNode)
+        return False
 
+
+    def printPaths(self,paths,appliedConstraints):
+        for agent in paths:
+            for currentPt in paths[agent]:
+                print("[",currentPt.x, currentPt.y,currentPt.time, "]", end=",")
+            print(" ")
+        print("Applied constraints")
+        for constraint in appliedConstraints:
+            print(constraint, end=",")
+            
 
     def getMinNode(self,openSet):
         minCostNode = None
@@ -110,7 +122,7 @@ class highLevel:
         return False
 
     #this will return constraints in order found in
-    def AlternativecheckForcollsions(self,paths): #returns the collsions found as a list or dict etc 
+    def checkForcollsions(self,paths): #returns the collsions found as a list or dict etc 
         collisions = []
         for agent in paths:
             for agent2 in paths:
@@ -122,23 +134,21 @@ class highLevel:
                 while i < len(paths[agent]) and i < len(paths[agent2]):
                     stepAgentOne = paths[agent][i]
                     stepAgentTwo = paths[agent2][i]
-                    if (stepAgentOne == stepAgentTwo):
-                        #newCollision = Collision(stepAgentOne.x,stepAgentOne.y,stepAgentOne.time,[agent,agent2])
+                    #Collison Type: Agents in square at the same time
+                    if (stepAgentOne == stepAgentTwo) or self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):
                         newCollision = collision(agent, agent2,[stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
                                                  [stepAgentTwo.x,stepAgentTwo.y,stepAgentTwo.time])
-                        if newCollision not in collisions:#this is not correctly catching duplicates 
+                    #Collsion Type: Agent crossing 
+                    #elif self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):
+                        #newCollision = collision(agent,agent2, [agentsLastPos.x,agentsLastPos.y,agentsLastPos.time],[agentTwoLastPos.x,agentTwoLastPos.y,agentTwoLastPos.time])
+                        if newCollision not in collisions: #need to check catching duplicates 
                             collisions.append(newCollision)
-                        #collison detected
-                    if  self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):
-                        newCollision = collision(agent,agent2, [agentsLastPos.x,agentsLastPos.y,agentsLastPos.time],[agentTwoLastPos.x,agentTwoLastPos.y,agentTwoLastPos.time])
-                        if newCollision not in collisions:
-                            collisions.append(newCollision)
-                        #because of the way this check is done a duplicate collisions of this type won't be found in further iterations
                     agentsLastPos = stepAgentOne
                     agentTwoLastPos = stepAgentTwo
                     i += 1
         return collisions
 
+    #need to some check for valid paths 
     def findPathsForAll(self,constraints):
         paths = {}
         for agent in self.agents:
