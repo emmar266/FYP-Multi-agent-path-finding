@@ -1,4 +1,4 @@
-import aStar
+import src.aStar as aStar
 import random
 
 

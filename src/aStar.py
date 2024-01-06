@@ -24,9 +24,10 @@ class aStarNode:
 class aStar:
     def __init__(self, graph) -> None:
         self.costPerStep = 1
+        self.areaOfGraph = graph.graph.width * graph.graph.length
         self.getValidNeighbours = graph.findValidNeighbours
 
-    def findPath(self,constraints,agent):
+    def findPath(self,constraints,agent,previousLongestPath):
         #return path
         startPos = agent.startPos
         nodeCameFrom = {}
@@ -37,18 +38,18 @@ class aStar:
         node.setTotalCost(self.calculateHeurisitic(agent.goal,node))
         startNode = node
         openSet.add(node) 
+        currentTime = 0
 
-        while len(openSet) != 0:
+        while len(openSet) != 0 and currentTime < 2*(previousLongestPath + self.areaOfGraph):
             currentNode = self.getLeastCost(openSet)#need to remove from closed set rn
             openSet.remove(currentNode)
             closedSet.add(currentNode)
-            neighbours,dynamic = self.getValidNeighbours(currentNode,constraints) #of what type is neighbour - should be like a node in the graph
+            neighbours = self.getValidNeighbours(currentNode,constraints) #of what type is neighbour - should be like a node in the graph
             currentTime = currentNode.time +1
-            if dynamic:
+            if currentTime < previousLongestPath:
                 #add current node to set
                 waitNode = copy.deepcopy(currentNode)
                 waitNode.time = currentTime
-                #
                 if [waitNode.x,waitNode.y,waitNode.time] in constraints:
                     openSet.add(waitNode)
                     nodeCameFrom[waitNode] = currentNode
