@@ -1,6 +1,6 @@
-import aStar
-import setupGrid
-import agent
+import code.aStar as aStar
+import code.setupGrid as setupGrid
+import code.agent as agent
 import cbs
 
 
@@ -10,8 +10,8 @@ graphm= setupGrid.graphManger(graph)
 agent1 = agent.agent(1,[0,1],[0,3])
 agent2 =  agent.agent(2,[0,3],[0,1])
 current = aStar.aStar(graphm)
-agent1path = current.findPath([],agent1)
-agent2path = current.findPath([],agent2)
+agent1path = current.findPath([],agent1, 4*4)
+agent2path = current.findPath([],agent2,4*4)
 paths = {agent1.agentId:agent1path, agent2.agentId: agent2path}
 algo = cbs.highLevel(graph,[agent1,agent2] )
 """

@@ -1,6 +1,6 @@
-from tree import Tree, node
-import aStar
-import setupGrid
+from src.tree import node
+import src.aStar as aStar
+import src.setupGrid as setupGrid
 import copy
 """
 ToDo:
@@ -77,6 +77,8 @@ class highLevel:
                     constraints[agent.agentId] = [newConstraint]
                 #run path finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
                 paths = self.findPathsForAll(constraints)
+                if type(paths) == bool:
+                    continue
                 cost = self.calculateNodeCost(paths) 
                 childNode = node(constraints, cost)
                 childNode.paths = paths
@@ -151,34 +153,16 @@ class highLevel:
     #need to some check for valid paths 
     def findPathsForAll(self,constraints):
         paths = {}
+        previousLongestPath = 0
         for agent in self.agents:
             if agent.agentId in constraints:
-                paths[agent] = self.aStar.findPath(constraints[agent.agentId],agent)
+                paths[agent] = self.aStar.findPath(constraints[agent.agentId],agent,previousLongestPath)
+
             else:
-                paths[agent] = self.aStar.findPath([],agent)
+                paths[agent] = self.aStar.findPath([],agent,previousLongestPath)
+            if paths[agent] is False:
+                return False
+            elif len(paths[agent]) > previousLongestPath:
+                previousLongestPath = len(paths)    
         return paths
     
-    """
-    #returns collsions per agent
-    def checkForcollsions(self,paths): #returns the collsions found as a list or dict etc 
-        collisions = {}
-        for agent in paths:
-            for agent2 in paths:
-                if agent == agent2:
-                    continue
-                i = 0
-                while i < len(paths[agent]) or i < len(paths[agent2]):
-                    stepAgentOne = paths[agent][i]
-                    stepAgentTwo = paths[agent2][i]
-                    if stepAgentOne == stepAgentTwo:
-                        newConstraint = Constraint(stepAgentOne.x,stepAgentOne.y,stepAgentOne.time,[agent,agent2])
-                        if agent in collisions:
-                            if newConstraint not in collisions[agent]: #or newConstraint in collisions[agent]:
-                                collisions[agent].append(newConstraint)
-                                collisions[agent2].append(newConstraint)
-                        else:
-                            collisions[agent] = [newConstraint]
-                            collisions[agent2] = [newConstraint]
-                        #collison detected
-                    i += 1
-        return collisions"""

@@ -1,6 +1,6 @@
-import aStar
-import setupGrid
-import agent
+import code.aStar as aStar
+import code.setupGrid as setupGrid
+import code.agent as agent
 import prioritised
 
 
@@ -11,5 +11,7 @@ agent1 = agent.agent(1,[0,1],[0,3])
 agent2 =  agent.agent(2,[0,3],[0,1])
 p = prioritised.prioritisedPlanning(graphm,[agent1,agent2])
 val = p.randomisedOrdering()
+print("v")
+
 
 
