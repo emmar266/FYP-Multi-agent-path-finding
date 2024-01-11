@@ -99,16 +99,7 @@ class TestAstar(unittest.TestCase):
         self.assertFalse(aStarObj.findPath(constraints,agent,previousLongestPath))
 
 
-    #similar to the getLeastCostFunction in cbs this test will need to be improved when i change set to pq
-    @parameterized.expand(
-        [
-            ["graphEndPosBlocking", "setNoDuplicateCosts","setNoDuplicateCosts"]
-        ]
-    )
-    def testGetLeastCost(self,graph,openSet, expectedResult):
-        wh = graphManger(self.graphDict[graph])
-        aStarObj = aStar(wh)
-        self.assertEqual(aStarObj.getLeastCost(self.openSetDict[openSet]), self.minNodeDict[expectedResult])
+
 
     @parameterized.expand(
         [

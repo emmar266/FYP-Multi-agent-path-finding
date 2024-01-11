@@ -1,4 +1,6 @@
 import copy
+from src.pq import PQ
+
 class aStarNode:
     def __init__(self,x,y,time) -> None:
         self.x = x
@@ -17,6 +19,8 @@ class aStarNode:
         if self.x == equivalentObj.x and self.y == equivalentObj.y and self.time == equivalentObj.time:
             return True
         return False
+
+
     
     def __hash__(self) -> int:
         return hash((self.x,self.y,self.time))
@@ -31,19 +35,28 @@ class aStar:
         #return path
         startPos = agent.startPos
         nodeCameFrom = {}
-        closedSet = set() #in this set items should look like (node,time), (node,time) etc
+
+        openPQ = PQ()
         openSet = set()
+        closedSet = set()
+
         node = aStarNode(startPos[0],startPos[1],0)
         node.setMovementCost(0)
         node.setTotalCost(self.calculateHeurisitic(agent.goal,node))
         startNode = node
-        openSet.add(node) 
+
+        openPQ.put((node.totalCost, node))
+        openSet.add(node)
+
         currentTime = 0
 
-        while len(openSet) != 0 and currentTime < 2*(previousLongestPath + self.areaOfGraph):
-            currentNode = self.getLeastCost(openSet)#need to remove from closed set rn
+        while openPQ.qsize() != 0 and currentTime < 2*(previousLongestPath + self.areaOfGraph):
+            currentNode = openPQ.get()#need to remove from closed set rn
             openSet.remove(currentNode)
+
+
             closedSet.add(currentNode)
+
             neighbours = self.getValidNeighbours(currentNode,constraints) #of what type is neighbour - should be like a node in the graph
             currentTime = currentNode.time +1
             if currentTime < previousLongestPath:
@@ -51,6 +64,7 @@ class aStar:
                 waitNode = copy.deepcopy(currentNode)
                 waitNode.time = currentTime
                 if [waitNode.x,waitNode.y,waitNode.time] in constraints:
+                    openPQ.put((waitNode.totalCost ,waitNode))
                     openSet.add(waitNode)
                     nodeCameFrom[waitNode] = currentNode
             for neighbour in neighbours:
@@ -63,11 +77,13 @@ class aStar:
                     destNode.totalCost = self.calculateHeurisitic(agent.goal,currentNode ) + destNode.movementCost
                     path.append(destNode)
                     return path
+                #this should be set
                 if neighbourNode in openSet or neighbourNode in closedSet: #this is a flawed statement, neighbour is of type list and 
                     continue
                 neighbourNode.movementCost = currentNode.movementCost + self.costPerStep #g = movement cost from start
                 neighbourNode.totalCost= self.calculateHeurisitic(agent.goal,currentNode ) + neighbourNode.movementCost  # movementCost + heuristic  f
                 #neightbourNode = aStarNode(neighbour[0],neighbour[1],currentTime,totalCost, movementCost)
+                openPQ.put((neighbourNode.totalCost,neighbourNode))
                 openSet.add(neighbourNode)
                 if neighbourNode not in nodeCameFrom:
                     nodeCameFrom[neighbourNode] = currentNode
@@ -83,26 +99,12 @@ class aStar:
         path.reverse()    
         return path
 
-    
-    def checkIfEquivalentNodeInSet(self,openSet,checkNode):
-        for node in openSet:
-            if node == checkNode:
-                return True
-        return False
 
     def atGoal(self,currentNode,goal):
         if currentNode[0] == goal[0] and currentNode[1] == goal[1]:
             return True
         return False
 
-    def getLeastCost(self,openSet):
-        minTotalCost = None
-        minNode = None
-        for node in openSet:
-            if minTotalCost == None or node.totalCost + node.time < minTotalCost: # need to reval whether time here is relevant in this if
-                minTotalCost = node.totalCost + node.time
-                minNode = node  
-        return minNode
 
 
     def calculateHeurisitic(self,goal,currentNode):
