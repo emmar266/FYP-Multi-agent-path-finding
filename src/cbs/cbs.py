@@ -1,6 +1,7 @@
 from src.tree import node
 import src.aStar as aStar
 import src.setupGrid as setupGrid
+from src.pq import PQ
 import copy
 """
 ToDo:
@@ -45,15 +46,14 @@ class highLevel:
         root.paths = currentPaths
 
         #highLevelTree.setInitialNode = node(currentCollisions,self.calculateNodeCost(paths))
-        #need check which will break out of function if there's no collisons 
-        openSet = set()
-        openSet.add(root)
+        #need check which will break out of function if there's no collisons
+        openPQ = PQ()
+        openPQ.put((root.cost , root))
 
-        while len(openSet) != 0:
-            currentNode = self.getMinNode(openSet)
+        while openPQ.qsize() != 0:
+            currentNode = openPQ.get()
 
-            openSet.remove(currentNode)
-            #get first conflict 
+            #get first conflict
 
             #run collision finder 
             currentCollisions = self.checkForcollsions(currentNode.paths)
@@ -87,7 +87,7 @@ class highLevel:
                 else:
                     currentNode.setLeftChild(childNode)
                 #currentNode.children.append(childNode)
-                openSet.add(childNode)
+                openPQ.put((childNode.cost, childNode))
         return False
 
 
@@ -101,14 +101,7 @@ class highLevel:
             print(constraint, end=",")
             
 
-    def getMinNode(self,openSet):
-        minCostNode = None
-        minNode = None
-        for node in openSet:
-            if minCostNode == None or node.cost < minCostNode:
-                minCostNode = node.cost
-                minNode = node  
-        return minNode
+
 
     def calculateNodeCost(self,paths):
         totalCost = 0
@@ -124,21 +117,47 @@ class highLevel:
         return False
 
     #this will return constraints in order found in
+    #need to add in here the detection of a collision b
     def checkForcollsions(self,paths): #returns the collsions found as a list or dict etc 
         collisions = []
+
         for agent in paths:
             for agent2 in paths:
                 if agent == agent2:
                     continue
                 i = 0
+                blockingCol = None
                 agentsLastPos = None
                 agentTwoLastPos = None
-                while i < len(paths[agent]) and i < len(paths[agent2]):
-                    stepAgentOne = paths[agent][i]
-                    stepAgentTwo = paths[agent2][i]
+                while i < len(paths[agent]) or i < len(paths[agent2]):
+                    a = len(paths[agent])
+                    b = len(paths[agent2])
+                    if i > len(paths[agent]) -1:
+                        stepAgentOne = agentsLastPos
+                        stepAgentOne.time += 1
+                        stepAgentTwo = paths[agent2][i]
+                        blockingCol = "agentOne"
+                    elif i > len(paths[agent2]) -1:
+                        stepAgentTwo = agentTwoLastPos
+                        stepAgentTwo.time +=1
+                        stepAgentOne = paths[agent][i]
+                        blockingCol = "agentTwo"
+                    else:
+                        stepAgentOne = paths[agent][i]
+                        stepAgentTwo = paths[agent2][i]
+
+
                     #Collison Type: Agents in square at the same time
                     if (stepAgentOne == stepAgentTwo) or self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):
-                        newCollision = collision(agent, agent2,[stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
+                        if blockingCol is not None:
+                            if blockingCol == "agentOne":
+                                newCollision = collision(agent,agent2, [stepAgentOne.x, stepAgentOne.y,len(paths[agent])-1 ],
+                                                         [stepAgentTwo.x, stepAgentTwo.y,stepAgentTwo.time])
+                            else:
+                                newCollision = collision(agent,agent2, [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
+                                                         [stepAgentTwo.x, stepAgentTwo.y, len(paths[agent2])-1])
+                        else:
+                            newCollision = collision(agent, agent2,[stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
                                                  [stepAgentTwo.x,stepAgentTwo.y,stepAgentTwo.time])
                     #Collsion Type: Agent crossing 
                     #elif self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):

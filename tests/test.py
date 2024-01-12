@@ -19,14 +19,15 @@ agentDict = {}
 agent1 = agent(1, [4, 1], [5, 6])
 agent2 = agent(2, [0, 1], [6, 6])
 agent3 = agent(3, [0, 3], [6, 3])
-"""
+
 agentDict["graphEndPosBlocking"] = [agent1, agent2, agent3]
 
 a = graphManger(graphDict["graphEndPosBlocking"])
-aStar(a).findPath([],)
+aStar(a).findPath([],agent1,9)
 
-print("aaaaaa")"""
+print("aaaaaa")
+"""
 a = highLevel(graphDict["graphEndPosBlocking"],[agent1,agent2,agent3])
 b = a.cbs()
-print("yee")
+print("yee")"""
 

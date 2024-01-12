@@ -39,9 +39,6 @@ class prioritisedPlanning:
         for node in path:
             constraints.append([node.x,node.y,node.time])
         return constraints
-        
-
-
 
     def randomiseOrdering(self):
         random.shuffle(self.agents)
