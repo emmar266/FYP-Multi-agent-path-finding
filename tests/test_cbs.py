@@ -57,7 +57,7 @@ class TestCBS(unittest.TestCase):
         agent1 = agent(1,[4,5],[0,0])
         agent2 = agent(2, [4, 0], [0, 5])
         agent3 = agent(3, [0, 5], [4, 0])
-        agent4 = agent(4, [0, 0], [4, 5])
+        agent4 = agent(4, [1, 0], [4, 5])
         self.agentDict["graph4AgentsUsingSameLane"] = [agent1,agent2,agent3,agent4]
 
         path1 = [aStarNode(0,0,0),aStarNode(1,0,1),aStarNode(2,0,2),
@@ -74,8 +74,7 @@ class TestCBS(unittest.TestCase):
                  aStarNode(0, 5,9)]
         path4 = [aStarNode(4, 5,0),aStarNode(3, 5,1),aStarNode(2, 5,2),
                  aStarNode(2, 4,3),aStarNode(2, 3,4),aStarNode(2, 2,5)
-                 ,aStarNode(2, 1,6),aStarNode(2, 0,7),aStarNode(1, 0,8),
-                 aStarNode(0, 0,9)]
+                 ,aStarNode(2, 1,6),aStarNode(2, 0,7),aStarNode(1, 0,8)]
         self.expectedPath["graph4AgentsUsingSameLane"] = {agent1:path1,agent2:path2,agent3:path3, agent4:path4}
 
 
@@ -194,7 +193,7 @@ class TestCBS(unittest.TestCase):
     @parameterized.expand(
         [
             ["graphEndPosBlocking", "graphEndPosBlocking",True],
-            #["graph4AgentsUsingSameLane", "graph4AgentsUsingSameLane",True],
+            ["graph4AgentsUsingSameLane", "graph4AgentsUsingSameLane",True],
             ["graphFourWayCollision", "graphFourWayCollision",True ]
 
         ]
@@ -245,14 +244,6 @@ class TestCBS(unittest.TestCase):
         self.assertTrue(True)
         #self.assertEqual(,expectedCollisions)
 
-""""
 
-
-    
-
-
-    #Couple things wrong here - astar is not working as expected
-    #
-    """
 if __name__ == '__main__':
     unittest.main()

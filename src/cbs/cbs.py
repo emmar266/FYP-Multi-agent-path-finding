@@ -3,6 +3,7 @@ import src.aStar as aStar
 import src.setupGrid as setupGrid
 from src.pq import PQ
 import copy
+
 """
 ToDo:
 When generating paths for all agents should have some sort of way to reuse paths with no new constraints applied
@@ -15,11 +16,13 @@ Need to know how we deal with nodes that don't return valid paths - do we try re
 
 
 class collision:
-    def __init__(self,agentOne,agentTwo, conflictOne, conflictTwo) -> None:
+    def __init__(self, agentOne, agentTwo, conflictOne, conflictTwo, delayAstar=0, extendAgent=None):
         self.agentOne = agentOne
         self.agentTwo = agentTwo
         self.agentOneCollidingPt = conflictOne
         self.agentTwoCollidingPt = conflictTwo
+        self.delayAstar = delayAstar
+        self.agentToExtend = extendAgent
 
     def __eq__(self, objToCmp) -> bool:
         if self.agentOne == objToCmp.agentTwo and self.agentTwo == objToCmp.agentOne:
@@ -29,98 +32,95 @@ class collision:
             if self.agentOneCollidingPt == objToCmp.agentTwoCollidingPt and self.agentTwoCollidingPt == objToCmp.agentOneCollidingPt:
                 return True
         return False
+
+
 class highLevel:
-    def __init__(self,graph,agents):
-        self.graphManager =setupGrid.graphManger(graph)
+    def __init__(self, graph, agents):
+        self.graphManager = setupGrid.graphManger(graph)
         self.aStar = aStar.aStar(self.graphManager)
         self.agents = agents
 
-
     def cbs(self):
 
-        #run path finding algo for all paths no constraints - should return list of all paths for each robot/task
-        currentPaths = self.findPathsForAll({}) 
-        #currentCollisions = self.collsionsFound(currentPaths)
+        # run path finding algo for all paths no constraints - should return list of all paths for each robot/task
+        currentPaths = self.findPathsForAll({})
+        # currentCollisions = self.collsionsFound(currentPaths)
 
-        root = node({},self.calculateNodeCost(currentPaths))
+        root = node({}, self.calculateNodeCost(currentPaths))
         root.paths = currentPaths
 
-        #highLevelTree.setInitialNode = node(currentCollisions,self.calculateNodeCost(paths))
-        #need check which will break out of function if there's no collisons
+        # highLevelTree.setInitialNode = node(currentCollisions,self.calculateNodeCost(paths))
+        # need check which will break out of function if there's no collisons
         openPQ = PQ()
-        openPQ.put((root.cost , root))
+        openPQ.put((root.cost, root))
 
         while openPQ.qsize() != 0:
             currentNode = openPQ.get()
 
-            #get first conflict
+            # get first conflict
 
-            #run collision finder 
+            # run collision finder
             currentCollisions = self.checkForcollsions(currentNode.paths)
-            if len(currentCollisions) ==0:
-                #no collisions, Valid paths found for all agents
+            if len(currentCollisions) == 0:
+                # no collisions, Valid paths found for all agents
                 return currentNode.paths
-            collision = currentCollisions.pop(0) # assuming for now that conflicts is a list
+            collision = currentCollisions.pop(0)  # assuming for now that conflicts is a list
 
-            for i in range(0,2):
+            for i in range(0, 2):
                 if i == 0:
                     agent = collision.agentOne
                     newConstraint = collision.agentOneCollidingPt
                 else:
                     agent = collision.agentTwo
                     newConstraint = collision.agentTwoCollidingPt
-                
+
                 constraints = copy.deepcopy(currentNode.constraints)
                 if agent.agentId in constraints:
                     constraints[agent.agentId].append(newConstraint)
                 else:
                     constraints[agent.agentId] = [newConstraint]
-                #run path finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
+                # run path finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
                 paths = self.findPathsForAll(constraints)
                 if type(paths) == bool:
                     continue
-                cost = self.calculateNodeCost(paths) 
+                cost = self.calculateNodeCost(paths)
                 childNode = node(constraints, cost)
                 childNode.paths = paths
                 if currentNode.left is None:
                     currentNode.setLeftChild(childNode)
                 else:
                     currentNode.setLeftChild(childNode)
-                #currentNode.children.append(childNode)
+                # currentNode.children.append(childNode)
                 openPQ.put((childNode.cost, childNode))
         return False
 
-
-    def printPaths(self,paths,appliedConstraints):
+    def printPaths(self, paths, appliedConstraints):
         for agent in paths:
             for currentPt in paths[agent]:
-                print("[",currentPt.x, currentPt.y,currentPt.time, "]", end=",")
+                print("[", currentPt.x, currentPt.y, currentPt.time, "]", end=",")
             print(" ")
         print("Applied constraints")
         for constraint in appliedConstraints:
             print(constraint, end=",")
-            
 
-
-
-    def calculateNodeCost(self,paths):
+    def calculateNodeCost(self, paths):
         totalCost = 0
         for agent in paths:
             totalCost += len(paths[agent])
-        return totalCost - len(paths) # minusing the len(paths) as the path includes end pos and want to not include that in this calculation
+        return totalCost - len(
+            paths)  # minusing the len(paths) as the path includes end pos and want to not include that in this calculation
 
-    def checkForCrossingNodes(self,lastAgent1Step,lastAgentTwoStep,currentAgentOneStep,currentAgentTwoStep):
+    def checkForCrossingNodes(self, lastAgent1Step, lastAgentTwoStep, currentAgentOneStep, currentAgentTwoStep):
         if lastAgent1Step is not None and lastAgentTwoStep is not None:
             if lastAgent1Step.x == currentAgentTwoStep.x and lastAgent1Step.y == currentAgentTwoStep.y:
-                if lastAgentTwoStep.x == currentAgentOneStep.x and lastAgentTwoStep.y == currentAgentOneStep.y:    
+                if lastAgentTwoStep.x == currentAgentOneStep.x and lastAgentTwoStep.y == currentAgentOneStep.y:
                     return True
         return False
 
-    #this will return constraints in order found in
-    #need to add in here the detection of a collision b
-    def checkForcollsions(self,paths): #returns the collsions found as a list or dict etc 
+    # this will return constraints in order found in
+    # need to add in here the detection of a collision b
+    def checkForcollsions(self, paths):  # returns the collsions found as a list or dict etc
         collisions = []
-
         for agent in paths:
             for agent2 in paths:
                 if agent == agent2:
@@ -130,58 +130,58 @@ class highLevel:
                 agentsLastPos = None
                 agentTwoLastPos = None
                 while i < len(paths[agent]) or i < len(paths[agent2]):
-                    a = len(paths[agent])
-                    b = len(paths[agent2])
-                    if i > len(paths[agent]) -1:
+                    if i > len(paths[agent]) - 1:
                         stepAgentOne = agentsLastPos
                         stepAgentOne.time += 1
                         stepAgentTwo = paths[agent2][i]
                         blockingCol = "agentOne"
-                    elif i > len(paths[agent2]) -1:
+                    elif i > len(paths[agent2]) - 1:
                         stepAgentTwo = agentTwoLastPos
-                        stepAgentTwo.time +=1
+                        stepAgentTwo.time += 1
                         stepAgentOne = paths[agent][i]
                         blockingCol = "agentTwo"
                     else:
                         stepAgentOne = paths[agent][i]
                         stepAgentTwo = paths[agent2][i]
 
-
-                    #Collison Type: Agents in square at the same time
-                    if (stepAgentOne == stepAgentTwo) or self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):
+                    # Collison Type: Agents in square at the same time
+                    if (stepAgentOne == stepAgentTwo) or self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,
+                                                                                    stepAgentOne, stepAgentTwo):
                         if blockingCol is not None:
+
                             if blockingCol == "agentOne":
-                                newCollision = collision(agent,agent2, [stepAgentOne.x, stepAgentOne.y,len(paths[agent])-1 ],
-                                                         [stepAgentTwo.x, stepAgentTwo.y,stepAgentTwo.time])
+                                newCollision = collision(agent, agent2,
+                                                         [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time]
+                                                         [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time],
+                                                         abs(len(paths[agent]) - len(paths[agent2])), blockingCol)
                             else:
-                                newCollision = collision(agent,agent2, [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
-                                                         [stepAgentTwo.x, stepAgentTwo.y, len(paths[agent2])-1])
+                                newCollision = collision(agent, agent2,
+                                                         [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
+                                                         [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time],
+                                                         abs(len(paths[agent]) - len(paths[agent2])), blockingCol)
                         else:
-                            newCollision = collision(agent, agent2,[stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
-                                                 [stepAgentTwo.x,stepAgentTwo.y,stepAgentTwo.time])
-                    #Collsion Type: Agent crossing 
-                    #elif self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,stepAgentOne ,stepAgentTwo):
-                        #newCollision = collision(agent,agent2, [agentsLastPos.x,agentsLastPos.y,agentsLastPos.time],[agentTwoLastPos.x,agentTwoLastPos.y,agentTwoLastPos.time])
-                        if newCollision not in collisions: #need to check catching duplicates 
+                            newCollision = collision(agent, agent2, [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
+                                                     [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time])
+
+                        if newCollision not in collisions:  # need to check catching duplicates
                             collisions.append(newCollision)
                     agentsLastPos = stepAgentOne
                     agentTwoLastPos = stepAgentTwo
                     i += 1
         return collisions
 
-    #need to some check for valid paths 
-    def findPathsForAll(self,constraints):
+    # need to some check for valid paths
+    def findPathsForAll(self, constraints):
         paths = {}
         previousLongestPath = 0
         for agent in self.agents:
             if agent.agentId in constraints:
-                paths[agent] = self.aStar.findPath(constraints[agent.agentId],agent,previousLongestPath)
+                paths[agent] = self.aStar.findPath(constraints[agent.agentId], agent, previousLongestPath)
 
             else:
-                paths[agent] = self.aStar.findPath([],agent,previousLongestPath)
+                paths[agent] = self.aStar.findPath([], agent, previousLongestPath)
             if paths[agent] is False:
                 return False
             elif len(paths[agent]) > previousLongestPath:
-                previousLongestPath = len(paths)    
+                previousLongestPath = len(paths)
         return paths
-    

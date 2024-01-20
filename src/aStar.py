@@ -1,18 +1,19 @@
 import copy
 from src.pq import PQ
 
+
 class aStarNode:
-    def __init__(self,x,y,time) -> None:
+    def __init__(self, x, y, time) -> None:
         self.x = x
         self.y = y
         self.time = time
         self.totalCost = None
         self.movementCost = None
 
-    def setTotalCost(self,totalCost):
+    def setTotalCost(self, totalCost):
         self.totalCost = totalCost
 
-    def setMovementCost(self,movementCost):
+    def setMovementCost(self, movementCost):
         self.movementCost = movementCost
 
     def __eq__(self, equivalentObj) -> bool:
@@ -20,10 +21,9 @@ class aStarNode:
             return True
         return False
 
-
-    
     def __hash__(self) -> int:
-        return hash((self.x,self.y,self.time))
+        return hash((self.x, self.y, self.time))
+
 
 class aStar:
     def __init__(self, graph) -> None:
@@ -31,8 +31,8 @@ class aStar:
         self.areaOfGraph = graph.graph.width * graph.graph.length
         self.getValidNeighbours = graph.findValidNeighbours
 
-    def findPath(self,constraints,agent,previousLongestPath):
-        #return path
+    def findPath(self, constraints, agent, previousLongestPath, delayPathEnd=0):
+        # return path
         startPos = agent.startPos
         nodeCameFrom = {}
 
@@ -40,9 +40,9 @@ class aStar:
         openSet = set()
         closedSet = set()
 
-        node = aStarNode(startPos[0],startPos[1],0)
+        node = aStarNode(startPos[0], startPos[1], 0)
         node.setMovementCost(0)
-        node.setTotalCost(self.calculateHeurisitic(agent.goal,node))
+        node.setTotalCost(self.calculateHeurisitic(agent.goal, node))
         startNode = node
 
         openPQ.put((node.totalCost, node))
@@ -50,62 +50,77 @@ class aStar:
 
         currentTime = 0
 
-        while openPQ.qsize() != 0 and currentTime < 2*(previousLongestPath + self.areaOfGraph):
-            currentNode = openPQ.get()#need to remove from closed set rn
+        while openPQ.qsize() != 0 and currentTime < 2 * (previousLongestPath + self.areaOfGraph):
+            currentNode = openPQ.get()  # need to remove from closed set rn
             openSet.remove(currentNode)
-
 
             closedSet.add(currentNode)
 
-            neighbours = self.getValidNeighbours(currentNode,constraints) #of what type is neighbour - should be like a node in the graph
-            currentTime = currentNode.time +1
+            neighbours = self.getValidNeighbours(currentNode,
+                                                 constraints)  # of what type is neighbour - should be like a node in the graph
+            currentTime = currentNode.time + 1
             if currentTime < previousLongestPath:
-                #add current node to set
+                # add current node to set
+                ####Ithink i need to change this
                 waitNode = copy.deepcopy(currentNode)
                 waitNode.time = currentTime
-                if [waitNode.x,waitNode.y,waitNode.time] in constraints:
-                    openPQ.put((waitNode.totalCost ,waitNode))
+                if [waitNode.x, waitNode.y, waitNode.time] not in constraints and (waitNode not in openSet and waitNode not in closedSet):
+                    openPQ.put((waitNode.totalCost, waitNode))
                     openSet.add(waitNode)
                     nodeCameFrom[waitNode] = currentNode
             for neighbour in neighbours:
-                neighbourNode = aStarNode(neighbour[0],neighbour[1],currentTime)
-                if self.atGoal(neighbour,agent.goal):
-                    #stop search and return path
-                    path = self.buildPath(nodeCameFrom,currentNode,startNode)
-                    destNode = aStarNode(agent.goal[0],agent.goal[1],currentTime)
+                neighbourNode = aStarNode(neighbour[0], neighbour[1], currentTime)
+                # Because I end the program here it becomes awkard to delay the end of this
+                if self.atGoal(neighbour, agent.goal) and delayPathEnd == 0:
+                    # stop search and return path
+                    path = self.buildPath(nodeCameFrom, currentNode, startNode)
+                    destNode = aStarNode(agent.goal[0], agent.goal[1], currentTime)
                     destNode.movementCost = currentNode.movementCost + self.costPerStep
-                    destNode.totalCost = self.calculateHeurisitic(agent.goal,currentNode ) + destNode.movementCost
+                    destNode.totalCost = self.calculateHeurisitic(agent.goal, currentNode) + destNode.movementCost
                     path.append(destNode)
                     return path
-                #this should be set
-                if neighbourNode in openSet or neighbourNode in closedSet: #this is a flawed statement, neighbour is of type list and 
+                if neighbourNode in openSet or neighbourNode in closedSet:  # this is a flawed statement, neighbour is of type list and
                     continue
-                neighbourNode.movementCost = currentNode.movementCost + self.costPerStep #g = movement cost from start
-                neighbourNode.totalCost= self.calculateHeurisitic(agent.goal,currentNode ) + neighbourNode.movementCost  # movementCost + heuristic  f
-                #neightbourNode = aStarNode(neighbour[0],neighbour[1],currentTime,totalCost, movementCost)
-                openPQ.put((neighbourNode.totalCost,neighbourNode))
+                neighbourNode.movementCost = currentNode.movementCost + self.costPerStep  # g = movement cost from start
+                neighbourNode.totalCost = self.calculateHeurisitic(agent.goal,
+                                                                   currentNode) + neighbourNode.movementCost  # movementCost + heuristic  f
+                openPQ.put((neighbourNode.totalCost, neighbourNode))
                 openSet.add(neighbourNode)
                 if neighbourNode not in nodeCameFrom:
                     nodeCameFrom[neighbourNode] = currentNode
-                #need to keep track of path - not sure if that should be done per node or not?
-        return False #path does not exist
-    
-    def buildPath(self, cameFrom,current,startPos):
+            # need to keep track of path - not sure if that should be done per node or not?
+        return False  # path does not exist
+
+    def buildPath(self, cameFrom, current, startPos):
         path = []
         path.append(current)
         while startPos not in path:
             current = cameFrom[current]
             path.append(current)
-        path.reverse()    
+        path.reverse()
         return path
 
-
-    def atGoal(self,currentNode,goal):
+    def atGoal(self, currentNode, goal):
         if currentNode[0] == goal[0] and currentNode[1] == goal[1]:
             return True
         return False
 
-
-
-    def calculateHeurisitic(self,goal,currentNode):
+    def calculateHeurisitic(self, goal, currentNode):
         return abs(currentNode.x - goal[0]) + abs(currentNode.y - goal[1])
+
+
+"""
+elif self.atGoal(neighbour,agent.goal):
+    delayPathEnd -= 1
+    #want to encourage the agent to stay at this position until it cannot anymore
+    #need to check if this will
+    delayNode = copy.deepcopy(currentNode)
+    delayNode.time += 1
+    if [delayNode.x,delayNode.y,delayNode.time] not in constraints:
+        delayNode.movementCost = 0
+        delayNode.totalCost =
+        break
+        #don't want ot consider any other neighbouring nodes at this point
+        #might need to reconsider this logic
+
+"""

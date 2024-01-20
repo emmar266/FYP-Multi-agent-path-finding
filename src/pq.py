@@ -11,5 +11,5 @@ class PQ(queue.PriorityQueue):
         super().put((priority, next(self.counter), obj))
 
     def get(self):
-        priority, count, obj =  super().get()
+        priority, count, obj = super().get()
         return obj
