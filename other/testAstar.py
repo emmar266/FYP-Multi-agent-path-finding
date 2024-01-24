@@ -19,7 +19,7 @@ graph.setStaticObstacle([[0,1],[0,2],[1,2]])
 graphm= setupGrid.graphManger(graph)
 agent1 = agent.agent(1,[0,0],[0,3])
 current = aStar.aStar(graphm)
-path = current.findPath([[2,2,3]],agent1,16)
+path = current.findPath([[2,2,3]],agent1,16, 2)
 print("we")
 
 

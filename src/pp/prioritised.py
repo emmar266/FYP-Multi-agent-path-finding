@@ -22,8 +22,12 @@ class prioritisedPlanning:
         paths = {}
         atLeastOnePathNotFound = False
         currentConstraints = []
+        previousLongestPath = 0
         for currentAgent in self.agents:
-            agentPath = self.aStar.findPath(currentConstraints, currentAgent )
+            if previousLongestPath == 0:
+                agentPath = self.aStar.findPath(currentConstraints, currentAgent, self.graph.graph.length * self.graph.graph.width )
+            else:
+                agentPath = self.aStar.findPath(currentConstraints, currentAgent, previousLongestPath)
             currentConstraints += self.pathToConstraints(agentPath)
             if agentPath is False:
                 #no path found 
@@ -32,6 +36,8 @@ class prioritisedPlanning:
 
             else:
                 paths[currentAgent] = agentPath
+                if len(paths[currentAgent]) > previousLongestPath:
+                    previousLongestPath = len(paths[currentAgent])
         return paths,atLeastOnePathNotFound
 
     def pathToConstraints(self,path):

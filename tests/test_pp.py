@@ -1,9 +1,10 @@
 import unittest
 from parameterized import parameterized
-from src.setupGrid import warehouseFloor
+from src.setupGrid import warehouseFloor, graphManger
 from src.agent import agent
+from src.pp.prioritised import prioritisedPlanning
 
-class TestCBS(unittest.TestCase):
+class TestPP(unittest.TestCase):
 
     def setUp(self):
         self.graphDict = {}
@@ -28,11 +29,26 @@ class TestCBS(unittest.TestCase):
 
     @parameterized.expand(
         [
+            ["graphEndPosBlocking", "graphEndPosBlocking"]
         ]
     )
-    def testPrioritisedPlanningValid(self):
-        pass
+    def testPrioritisedPlanningValid(self,graph, agents):
+        graphm = graphManger(self.graphDict[graph])
+        p = prioritisedPlanning(graphm, self.agentDict[agents])
+        val = p.randomisedOrdering()
+        self.assertTrue(val != False)
 
+
+    @parameterized.expand(
+        [
+            ["graphEndPosBlocking", "graphEndPosBlocking"]
+        ]
+    )
+    def testRandomiseOrdering(self,graph,agents):
+        graphm = graphManger(self.graphDict[graph])
+        p = prioritisedPlanning(graphm, self.agentDict[agents])
+
+"""
     @parameterized.expand(
         [
             ["graphEndPosBlocking","graphEndPosBlocking"]
@@ -41,10 +57,4 @@ class TestCBS(unittest.TestCase):
     def testPrioritisedPlanningInvalid(self,graph, agents):
         pass
 
-
-    @parameterized.expand(
-        [
-        ]
-    )
-    def testRandomiseOrdering(self):
-        pass
+"""

@@ -34,6 +34,23 @@ class collision:
         return False
 
 
+class ConstraintsStructure:
+    def __init__(self, agentId, constraints=[], delayAstar=0):
+        self.agentId = agentId
+        self.constraints = constraints
+        self.delayAstar = delayAstar
+
+    def addConstraint(self, constraint, delayAstar):
+        self.constraints.append(constraint)
+        if delayAstar > self.delayAstar:
+            self.delayAstar = delayAstar
+
+    def __eq__(self, other):
+        if self.constraints == other.constraints and self.agentId == other.agentId:
+            return True
+        return False
+
+
 class highLevel:
     def __init__(self, graph, agents):
         self.graphManager = setupGrid.graphManger(graph)
@@ -67,18 +84,24 @@ class highLevel:
             collision = currentCollisions.pop(0)  # assuming for now that conflicts is a list
 
             for i in range(0, 2):
+                delayEnd = 0
                 if i == 0:
                     agent = collision.agentOne
                     newConstraint = collision.agentOneCollidingPt
+                    if collision.delayAstar != 0 and collision.agentToExtend =="agentOne":
+                        delayEnd = collision.delayAstar
                 else:
                     agent = collision.agentTwo
                     newConstraint = collision.agentTwoCollidingPt
+                    if collision.delayAstar != 0 and collision.agentToExtend =="agentTwo":
+                        delayEnd = collision.delayAstar
 
                 constraints = copy.deepcopy(currentNode.constraints)
                 if agent.agentId in constraints:
-                    constraints[agent.agentId].append(newConstraint)
+                    constraints[agent.agentId].addConstraint(newConstraint,delayEnd )
                 else:
-                    constraints[agent.agentId] = [newConstraint]
+                    new = ConstraintsStructure(agent.agentId, [newConstraint],delayEnd)
+                    constraints[agent.agentId] = new #[newConstraint]
                 # run path finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
                 paths = self.findPathsForAll(constraints)
                 if type(paths) == bool:
@@ -118,7 +141,6 @@ class highLevel:
         return False
 
     # this will return constraints in order found in
-    # need to add in here the detection of a collision b
     def checkForcollsions(self, paths):  # returns the collsions found as a list or dict etc
         collisions = []
         for agent in paths:
@@ -151,7 +173,7 @@ class highLevel:
 
                             if blockingCol == "agentOne":
                                 newCollision = collision(agent, agent2,
-                                                         [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time]
+                                                         [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
                                                          [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time],
                                                          abs(len(paths[agent]) - len(paths[agent2])), blockingCol)
                             else:
@@ -171,12 +193,14 @@ class highLevel:
         return collisions
 
     # need to some check for valid paths
+    # need some way to pass in whether its a blocking collision or not
     def findPathsForAll(self, constraints):
         paths = {}
         previousLongestPath = 0
         for agent in self.agents:
             if agent.agentId in constraints:
-                paths[agent] = self.aStar.findPath(constraints[agent.agentId], agent, previousLongestPath)
+                a = constraints[agent.agentId]
+                paths[agent] = self.aStar.findPath(constraints[agent.agentId].constraints, agent, previousLongestPath,constraints[agent.agentId].delayAstar )
 
             else:
                 paths[agent] = self.aStar.findPath([], agent, previousLongestPath)
