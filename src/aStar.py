@@ -32,7 +32,7 @@ class aStar:
         self.getValidNeighbours = graph.findValidNeighbours
 
 
-    def findPath(self, constraints, agent, previousLongestPath, delayPathEnd=0):
+    def findPath(self, constraints, agent, previousLongestPath, delayPathEndUntil=0):
         # return path
         startPos = agent.startPos
         nodeCameFrom = {}
@@ -66,14 +66,13 @@ class aStar:
                 waitNode.time = currentTime
                 if [waitNode.x, waitNode.y, waitNode.time] not in constraints:
                     if (waitNode not in openSet and waitNode not in closedSet):
-                        print("here")
                         openPQ.put((waitNode.totalCost, waitNode))
                         openSet.add(waitNode)
                         nodeCameFrom[waitNode] = currentNode
             for neighbour in neighbours:
                 neighbourNode = aStarNode(neighbour[0], neighbour[1], currentTime)
                 # Because I end the program here it becomes awkard to delay the end of this
-                if self.atGoal(neighbour, agent.goal) and delayPathEnd == 0:
+                if self.atGoal(neighbour, agent.goal) and currentTime > delayPathEndUntil:
                     # stop search and return path
                     path = self.buildPath(nodeCameFrom, currentNode, startNode)
                     destNode = aStarNode(agent.goal[0], agent.goal[1], currentTime)
@@ -81,16 +80,8 @@ class aStar:
                     destNode.totalCost = self.calculateHeurisitic(agent.goal, currentNode) + destNode.movementCost
                     path.append(destNode)
                     return path
-                elif self.atGoal(neighbour, agent.goal):
-                    delayPathEnd -= 1
-                    if ([neighbourNode.x, neighbourNode.y, neighbourNode.time] not in constraints and
-                            neighbourNode not in openSet and neighbourNode not in closedSet):
-                        neighbourNode.movementCost = 0
-                        neighbourNode.totalCost = 0
-                        openPQ.put((neighbourNode.totalCost, neighbourNode))
-                        openSet.add(neighbourNode)
-                        nodeCameFrom[neighbourNode] = currentNode
-                        continue
+                #elif self.atGoal(neighbour, agent.goal):
+                #    delayPathEndUntil -= 1
 
                 if neighbourNode in openSet or neighbourNode in closedSet:  # this is a flawed statement, neighbour is of type list and
                     continue
