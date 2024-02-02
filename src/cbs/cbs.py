@@ -170,17 +170,11 @@ class highLevel:
                     if (stepAgentOne == stepAgentTwo) or self.checkForCrossingNodes(agentsLastPos, agentTwoLastPos,
                                                                                     stepAgentOne, stepAgentTwo):
                         if blockingCol is not None:
+                            newCollision = collision(agent, agent2,
+                                                     [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
+                                                     [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time],
+                                                     stepAgentOne.time, blockingCol)
 
-                            if blockingCol == "agentOne":
-                                newCollision = collision(agent, agent2,
-                                                         [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
-                                                         [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time],
-                                                         abs(len(paths[agent]) - len(paths[agent2])), blockingCol)
-                            else:
-                                newCollision = collision(agent, agent2,
-                                                         [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
-                                                         [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time],
-                                                         abs(len(paths[agent]) - len(paths[agent2])), blockingCol)
                         else:
                             newCollision = collision(agent, agent2, [stepAgentOne.x, stepAgentOne.y, stepAgentOne.time],
                                                      [stepAgentTwo.x, stepAgentTwo.y, stepAgentTwo.time])

@@ -53,9 +53,10 @@ class reservedAreasStatic:
         #calculate paths for all reserved agents
         #create constraints based on these agents
             # will have to modify cbs to allow the function to take in initial constraints
-            # or I could allow the graph to have constraints
+            # or I could allow the graph to have constraints - easier to modify cbs and makes more sense i thnk
 
         pass
 
     def dynamicPP(self):
+
         pass
