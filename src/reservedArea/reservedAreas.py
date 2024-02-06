@@ -1,14 +1,12 @@
 from src.aStar import aStar
 from src.setupGrid import graphManger
-from src.cbs.cbs import highLevel
+from src.cbs.cbs import highLevel, ConstraintsStructure
 from src.pp.prioritised import prioritisedPlanning
-
-
 
 class reservedAreasStatic:
     def __init__(self,graph, agents):
-        self.graph = graph
-        self.graphArea = graph.width * graph.length
+        self.graph = graphManger(graph)
+        self.graphArea = self.graph.graph.width * self.graph.graph.length
         self.agents = agents
 
 
@@ -26,37 +24,49 @@ class reservedAreasStatic:
 
     def staticCBS(self,reservedAgents):
         # Calculate paths for all reserved agents
-        reservedPaths = {}
+        aStarObj = aStar(self.graph)
+        reservedPaths = []
         for agent in reservedAgents:
-            reservedPaths[agent] = aStar.findPath([], agent,self.graphArea)
+            reservedPaths += aStarObj.findPath([],agent,self.graphArea)
         # add to graph with setStaticObject
         self.graph.graph.setStaticObstacle(self.convertPathToConstraintsStatic(reservedPaths))
         #run cbs as usual
-        cbsAlgo =highLevel(self.graph,self.agents)
+        cbsAlgo =highLevel(self.graph.graph,self.agents)
         cbsAlgo.cbs()
-        pass
 
     def staticPP(self,reservedAgents):
         # Calculate paths for all reserved agents
-        reservedPaths = {}
+        aStarObj = aStar(self.graph)
+        reservedPaths = []
         for agent in reservedAgents:
-            reservedPaths[agent] = aStar.findPath([], agent,self.graphArea)
+            reservedPaths += aStarObj.findPath([],agent,self.graphArea)
         # add to graph with setStaticObject
         self.graph.graph.setStaticObstacle(self.convertPathToConstraintsStatic(reservedPaths))
         #run pp as usual
         p = prioritisedPlanning(self.graph, self.agents)
         val = p.randomisedOrdering()
 
-        pass
+    def setupInitialConstraintsCBS(self,paths):
+        constraints = {}
+        for agent in self.agents:
+            constraints[agent.agentId] = ConstraintsStructure(agent.agentId, paths)
+        return constraints
 
-    def dynamicCBS(self):
-        #calculate paths for all reserved agents
-        #create constraints based on these agents
-            # will have to modify cbs to allow the function to take in initial constraints
-            # or I could allow the graph to have constraints - easier to modify cbs and makes more sense i thnk
 
-        pass
+    def dynamicCBS(self,reservedAgents):
+        aStarObj = aStar(self.graph)
+        reservedPaths = []
+        for agent in reservedAgents:
+            reservedPaths += aStarObj.findPath([], agent,self.graphArea)
+        constraints = self.setupInitialConstraintsCBS(reservedPaths)
+        #run cbs as usual
+        cbsAlgo =highLevel(self.graph.graph,self.agents)
+        cbsAlgo.cbs(constraints)
 
-    def dynamicPP(self):
-
-        pass
+    def dynamicPP(self, reservedAgents):
+        aStarObj = aStar(self.graph)
+        reservedPaths = []
+        for agent in reservedAgents:
+            reservedPaths += aStarObj.findPath([], agent,self.graphArea)
+        p = prioritisedPlanning(self.graph, self.agents)
+        val = p.randomisedOrdering(reservedPaths)

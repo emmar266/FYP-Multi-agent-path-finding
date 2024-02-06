@@ -57,13 +57,13 @@ class highLevel:
         self.aStar = aStar.aStar(self.graphManager)
         self.agents = agents
 
-    def cbs(self):
+    def cbs(self, initialConstraints={}):
 
         # run path finding algo for all paths no constraints - should return list of all paths for each robot/task
         currentPaths = self.findPathsForAll({})
         # currentCollisions = self.collsionsFound(currentPaths)
 
-        root = node({}, self.calculateNodeCost(currentPaths))
+        root = node(initialConstraints, self.calculateNodeCost(currentPaths))
         root.paths = currentPaths
 
         # highLevelTree.setInitialNode = node(currentCollisions,self.calculateNodeCost(paths))

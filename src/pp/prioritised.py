@@ -8,9 +8,9 @@ class prioritisedPlanning:
         self.agents = agents
         self.aStar = aStar.aStar(self.graph)
 
-    def randomisedOrdering(self):
+    def randomisedOrdering(self,initialConstraints=[]):
         for i in range(0,len(self.agents)//2):
-            paths,pathUnFound = self.getPathsOnPriority()
+            paths,pathUnFound = self.getPathsOnPriority(initialConstraints)
             if pathUnFound:
                 self.randomisedOrdering() 
                 continue
@@ -18,7 +18,7 @@ class prioritisedPlanning:
                 return paths
         return False
 
-    def getPathsOnPriority(self):
+    def getPathsOnPriority(self, initialConstraints=[]):
         paths = {}
         atLeastOnePathNotFound = False
         currentConstraints = []
