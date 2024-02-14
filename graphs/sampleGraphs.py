@@ -20,9 +20,42 @@ agent3 = agent(3,[0,1], [3,1])
 
 
 #8X8 no static objects
+#empty
 graph = warehouseFloor(8,8)
 graphm = graphManger(graph)
 
+
+#warehouse like
+graph = warehouseFloor(8,8)
+graph.setStaticObstacle(
+    [
+        [0,0],[1,0],[2,0],[6,0],[7,0],
+        [0,2],[1,2],[2,2],[6,2],[7,2],
+        [0,5],[1,5],[2,5],[6,5],[7,5]
+    ]
+
+)
+graphm = graphManger(graph)
+
+
+
+#longer shelves
+graph = warehouseFloor(8,8)
+graphm = graphManger(graph)
+graph.setStaticObstacle(
+    [
+        [0,1],[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],
+        [0,2],[1,2],[2,2],[3,2],[4,2],[5,2],[6,2],
+        [0,6],[1,6],[2,6],[3,6],[4,6],[5,6],[6,6]
+
+    ]
+)
+
+
+
+
+graph = warehouseFloor(8,8)
+graphm = graphManger(graph)
 
 
 

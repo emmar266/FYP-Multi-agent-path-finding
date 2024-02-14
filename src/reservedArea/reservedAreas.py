@@ -9,7 +9,10 @@ class reservedAreasStatic:
         self.graphArea = self.graph.graph.width * self.graph.graph.length
         self.agents = agents
 
-
+    def decideReservedAgents(self):
+        #want to run for all agents their initial paths
+        #want to favour #
+        pass
 
     def checkReservedAgentsDontCollide(self):
         #should return true or false
@@ -18,7 +21,7 @@ class reservedAreasStatic:
     def convertPathToConstraintsStatic(self,paths):
         dynamic = []
         for path in paths:
-            for step in paths:
+            for step in path:
                 dynamic.append([step.x,step.y])
         return dynamic
 
@@ -70,3 +73,23 @@ class reservedAreasStatic:
             reservedPaths += aStarObj.findPath([], agent,self.graphArea)
         p = prioritisedPlanning(self.graph, self.agents)
         val = p.randomisedOrdering(reservedPaths)
+
+    def addBufferConstraints(self,constraints):
+        initialLengthOfConstraints = len(constraints)
+        i = 0
+        while i < initialLengthOfConstraints:
+            current = constraints[i]
+            constraints += self.graph.findValidNeighbours(current, constraints)
+            i+=1
+        return constraints
+
+
+    def dynamicCBSWithBuffer(self,reservedAgents):
+        aStarObj = aStar(self.graph)
+        reservedPaths = []
+        for agent in reservedAgents:
+            reservedPaths += aStarObj.findPath([], agent,self.graphArea)
+        constraints = self.setupInitialConstraintsCBS(reservedPaths)
+        bufferedConstraints = self.addBufferConstraints(constraints)
+        cbsAlgo =highLevel(self.graph.graph,self.agents)
+        cbsAlgo.cbs(bufferedConstraints)

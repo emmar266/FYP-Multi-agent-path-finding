@@ -11,7 +11,7 @@ class aStarNode:
         self.movementCost = None
 
     def setTotalCost(self, totalCost):
-        self.totalCost = totalCost
+        self.totalCost = totalCost + self.time
 
     def setMovementCost(self, movementCost):
         self.movementCost = movementCost
