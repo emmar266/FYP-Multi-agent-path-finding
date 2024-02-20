@@ -11,5 +11,5 @@ agent1 = agent(1, [2,2], [4,7])
 agent2 = agent(2, [0,5], [5,5])
 agents = [agent1,agent2]
 a = reservedAgentDecider(graph, agents)
-a.attemptOne()
+a.attemptTwo()
 
