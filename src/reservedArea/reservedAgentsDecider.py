@@ -2,12 +2,14 @@ from src.setupGrid import graphManger
 from src.aStar import aStar
 from src.pathObj import Paths
 import copy
-
+import random
 
 class reservedAgentDecider:
     def __init__(self,graph,agents):
         self.graph = graph
         self.agents = agents
+        self.collisionM = None
+        self.initalPaths = None
 
     def convertPathToConstraintsStatic(self,paths):
         dynamic = []
@@ -16,11 +18,9 @@ class reservedAgentDecider:
                 dynamic.append([step.x,step.y,step.time])
         return dynamic
 
-    def tempGraphChange(self,constraints):
-        tempGraph = copy.deepcopy(self.graph)
 
-
-    #This will work for one agent
+    #This attempt is not ideal as it will favour agents to be reserved which are completely separate from other agents
+    #   - Which means likely no improvement in regards to time for CBS
     def attemptOne(self):
         graphM = graphManger(self.graph)
         aStarObj = aStar(graphM)
@@ -43,11 +43,7 @@ class reservedAgentDecider:
         return potentialAgent
 
     #can be used for
-    def raDontBlockStartEnd(self,reservedPath):
-        for agent in self.agents:
-            if agent.startPos in reservedPath or agent.goal in reservedPath:
-                return False
-        return True
+
 
     #For static and buffer could for each agent try to be a static buffer and ensure each agent can find a
 
@@ -58,6 +54,17 @@ class reservedAgentDecider:
             if node in path2:
                 return True
         return False
+
+    def getInitialPaths(self):
+        graphM = graphManger(self.graph)
+        aStarObj = aStar(graphM)
+        paths = {}
+        for agent in self.agents:
+            paths[agent] = aStarObj.findPath([], agent, self.graph.width * self.graph.length)
+        #Create Path object and create
+        paths = Paths(paths)
+        paths.makePathAsList()
+        self.initalPaths = paths
 
 
     def createPathMatrix(self,paths):
@@ -72,41 +79,32 @@ class reservedAgentDecider:
                     print(self.agents.index(agent2))
                     collisionMatrix[self.agents.index(agent)][self.agents.index(agent2)] =1
                     collisionMatrix[self.agents.index(agent2)][self.agents.index(agent)] =1
-        """
-        for agentIndex,agent in enumerate(self.agents):
-            for agentTwoIndex,agent2 in enumerate(self.agents):
-                if agent.agentId == agent2.agentId:
-                    continue
-                if self.findPathSimilarities(paths[agent.agentId],paths[agent2.agentId]):
-                    #have no way to guarantee that agentids are spanning from 0 - len(agents)-1 must index
-                    collisionMatrix[agentIndex,agentTwoIndex]
-                    collisionMatrix[agentTwoIndex,agentIndex]"""
         return collisionMatrix
 
 
     #for every path check if whitespace aro und
     def attemptTwo(self,numReservedAreas):
-        graphM = graphManger(self.graph)
-        aStarObj = aStar(graphM)
-        paths = {}
-        for agent in self.agents:
-            paths[agent] = aStarObj.findPath([], agent, self.graph.width * self.graph.length)
-        paths = Paths(paths)
-        paths.makePathAsList()
-        collisionM = self.createPathMatrix(paths)
-        #as of python 3.7 you can sort dict
-        sortedpaths = dict(sorted(paths.paths.items(), key=lambda path: len(path[1])*-1))
+        #Get initial free paths for all agents
+        if self.initalPaths is None:
+            self.getInitialPaths()
+        #Create a collision matrix which shows agents who are colliding
+        collisionM = self.createPathMatrix(self.initalPaths)
+        #as of python 3.7 you can sort dict - sort dict based on length of path
+        sortedpaths = dict(sorted(self.initalPaths.paths.items(), key=lambda path: len(path[1])*-1))
         potentialAgents = {}
-
+        #iterate through all agents and check if the current agent was reserved, would paths that collide still
+        #be able to get to dest
         for agent in sortedpaths:
             agentPossible = True
+            #get row of agent and check if collide with current agent, denoted by 1 in matrix
             for index,collision in enumerate(collisionM[self.agents.index(agent)]):
                 if collision == 1:
+                    #Create a copy of the graph so you can add static obstacles - ie reserved area
                     tempGraph = copy.deepcopy(self.graph)
-                    tempGraph.setStaticObstacle(paths.pathWithoutTime[agent])
+                    tempGraph.setStaticObstacle(self.initalPaths.pathWithoutTime[agent])
                     graphM = graphManger(tempGraph)
                     aStarObj = aStar(graphM)
-                    #need to regen path with ra as
+                    #need to regenerate path with ra as static obstacle
                     possiblePath = aStarObj.findPath([],self.agents[index],self.graph.width * self.graph.length)
                     if possiblePath is False:
                         #Not a possible reserved agent
@@ -114,17 +112,52 @@ class reservedAgentDecider:
                         break
             if agentPossible:
                 potentialAgents[agent] = sortedpaths[agent]
-        #need to know create some way of deciding what agents are compatible as reserved areas together
-        if len(potentialAgents) < numReservedAreas:
-            return False
-        #need to get compatible reservedAgents
-        compatibleRAAgents ={}
-        for agent in potentialAgents:
-            for agent2 in potentialAgents:
-                if agent == agent2:
-                    continue
-                if collisionM[]
-
-
+        self.collisionM = collisionM
         return potentialAgents
 
+    def unCollidingRA(self,collisionMatrix,agent,potentialAgents):
+        indexOfCurrent = self.agents.index(agent)
+        row = collisionMatrix[indexOfCurrent]
+        possibleCompatible = []
+        for index,value in enumerate(row):
+            #possible other agent
+            if indexOfCurrent == index:
+                continue
+            if self.agents[index] in potentialAgents:
+                if value != 1:
+                    possibleCompatible.append(self.agents[index])
+        return possibleCompatible
+
+    def check(self,potentialAgents):
+        for index,agent in enumerate(potentialAgents):
+            for index2,agent2 in enumerate(potentialAgents):
+                if self.collisionM[self.agents.index(agent)][self.agents.index(agent2)] == 1:
+                    return False
+        return True
+
+    #agents in potentialAgents
+    def findCompatibleRA(self,potentialAgents, collisionMatrix, desiredNumRA):
+        if desiredNumRA ==1:
+            return [potentialAgents[0]]
+        self.collisionM = collisionMatrix
+        for agent in potentialAgents:
+            #find agents not colliding with agent that are reserved
+            possibleCompa = self.unCollidingRA(collisionMatrix,agent,potentialAgents)
+            if len(possibleCompa) < desiredNumRA-1:
+                continue
+            #need to check
+            for i in range(desiredNumRA):
+                random.shuffle(possibleCompa)
+                if self.check(possibleCompa[:desiredNumRA-1]):
+                    toReturn = possibleCompa[:desiredNumRA-1]
+                    toReturn.append(agent)
+                    return toReturn
+        return False
+
+    #
+    def findCompatibleRaRandom(self,potentialAgents,desiredNumRA):
+        for i in range(desiredNumRA *2):
+            random.shuffle(potentialAgents)
+            if self.check(potentialAgents[:desiredNumRA]):
+                return potentialAgents[:desiredNumRA]
+        return False
