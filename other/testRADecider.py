@@ -1,4 +1,4 @@
-from src.reservedArea.reservedAreas import reservedAreasStatic
+from src.reservedArea.reservedAreasStatic import reservedAreasStatic
 from src.setupGrid import warehouseFloor, graphManger
 from src.agent import agent
 from src.reservedArea.reservedAgentsDecider import reservedAgentDecider
@@ -20,7 +20,7 @@ graphm = graphManger(graph)
 agent1 = agent(1, [1,3], [1,9])
 agent2 = agent(2, [7,3], [7,9])
 agent3 = agent(3, [5,6], [10,6])
-agents = [agent2,agent3]
+agents = [agent1,agent2,agent3]
 a = reservedAgentDecider(graph, agents)
 a.attemptTwo(2)
 
