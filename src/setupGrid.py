@@ -1,7 +1,7 @@
  
 class warehouseFloor:
-    def __init__(self,x, y) -> None:
-        self.floorPlan = [[0] * x for _ in range(y)]
+    def __init__(self,x, y, valueInMatrix=0) -> None:
+        self.floorPlan = [[valueInMatrix] * x for _ in range(y)]
         self.width = x
         self.length = y
 
