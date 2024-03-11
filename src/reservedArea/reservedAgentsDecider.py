@@ -163,7 +163,7 @@ class RAattemptThree(reservedAgentDecider):
         toCheck = set()
         for agent in agents:
             indexOfCurrent = self.agents.index(agent)
-            row = self.collisionM[agent]
+            row = self.collisionM[indexOfCurrent]
             for index, value in enumerate(row):
                 # possible other agent
                 if indexOfCurrent == index:
@@ -185,7 +185,7 @@ class RAattemptThree(reservedAgentDecider):
     def checkIfAgentsHaveValidPath(self,reserved,agentsToCheck):
         tempGraph = copy.deepcopy(self.graph)
         paths = self.getTimeFreePathofRA(reserved)
-        tempGraph.setStaticObstacle(self.initalPaths.pathWithoutTime[paths])
+        tempGraph.setStaticObstacle(paths)
         graphM = graphManger(tempGraph)
         aStarObj = aStar(graphM)
         for unreserved in agentsToCheck:
@@ -193,6 +193,7 @@ class RAattemptThree(reservedAgentDecider):
             if path is False:
                 return False
         return True
+
 
 
     #get intial paths for all agents
@@ -221,14 +222,17 @@ class RAattemptThree(reservedAgentDecider):
                 possibleCompa = list(sortedpaths.keys())#.remove(agent)
                 possibleCompa.remove(agent)
                 #if possibleCompa is the same length as numReserved then there's no point in shuffling it x times
+                #if len(possibleCompa)
                 random.shuffle(possibleCompa)
+                #need to first check if those in possible compa collide
+                current = possibleCompa[:numReservedAreas-1]
+                current.append(agent)
+                if self.check(current) is False:
+                    continue
                 #get agents colliding with those in possibleCompa
-                self.getColliding(possibleCompa)
-
-                #check if those can plan there path around those in possibleCompa
-                if self.check(possibleCompa[:numReservedAreas - 1]):
-                    toReturn = possibleCompa[:numReservedAreas - 1]
-                    toReturn.append(agent)
-                    return toReturn
+                toCheck = self.getColliding(current)
+                # check if those can plan there path around those in possibleCompa
+                if self.checkIfAgentsHaveValidPath(current, toCheck):
+                    return current, self.initalPaths.pathWithoutTime
         return False
 

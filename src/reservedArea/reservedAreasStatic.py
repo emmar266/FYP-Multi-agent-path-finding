@@ -16,18 +16,18 @@ class reservedAreasStatic:
         reservedAgentDecider = RAAttemptTwo(self.graph.graph,self.agents)
         potentialAgents = reservedAgentDecider.attemptTwo(numRA)
         raAgents =reservedAgentDecider.findCompatibleRaRandom(list(potentialAgents.keys()), numRA)
-        self.staticCBS(raAgents,potentialAgents)
+        return self.staticCBS(raAgents,potentialAgents)
     #tested works
     def reservedAreaDeciderVersionOne2(self,numRA):
         reservedAgentDecider = RAAttemptTwo(self.graph.graph,self.agents)
         potentialAgents = reservedAgentDecider.attemptTwo(numRA)
         raAgents =reservedAgentDecider.findCompatibleRA(list(potentialAgents.keys()),numRA)
-        self.staticCBS(raAgents,potentialAgents)
+        return self.staticCBS(raAgents,potentialAgents)
 
     def reservedAreaDeciderVersionTwo(self,numRA):
         reservedAgentDecider = RAattemptThree(self.graph.graph,self.agents)
-        potentialAgents = reservedAgentDecider.attemptThree(numRA)
-        self.staticCBS(potentialAgents,potentialAgents)
+        raAgents, paths = reservedAgentDecider.attemptThree(numRA)
+        return self.staticCBS(raAgents,paths)
 
     def convertPathToConstraintsStatic(self,paths):
         dynamic = []
@@ -43,5 +43,5 @@ class reservedAreasStatic:
             self.graph.graph.setStaticObstacle(agentPaths[agent])
         #run cbs as usual
         cbsAlgo =highLevel(self.graph.graph,agents)
-        cbsAlgo.cbs()
+        return cbsAlgo.cbs()
 

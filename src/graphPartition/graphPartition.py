@@ -1,6 +1,6 @@
 from src.setupGrid import graphManger
 from src.cbs.cbs import highLevel
-from src.graphPartition.graphPartitionDecider import graphPartitionDecider
+from src.graphPartition.graphPartitionDecider import graphPartitionDeciderV1,graphPartitionDeciderV2
 
 class graphPartition:
 
@@ -47,9 +47,13 @@ class graphPartition:
                 #no partitions intersect at this point
 
 
-    def getPartitions(self,agents,graph):
-        partionDecider = graphPartitionDecider(graph, agents)
-        partitions = partionDecider.graphAnalysis(0.6, 0.2 )
+    def getPartitionsV1(self,agents,graph):
+        partitionDecider = graphPartitionDeciderV1(graph, agents)
+        partitions = partitionDecider.graphAnalysis(0.6, 0.2 )
         agentAssigned = self.assignAgentsToPartition(partitions, agents)
         self.givenPartition(partitions, agentAssigned)
 
+    def getPartitionsV2(self,agents,graph):
+        partitionDecider = graphPartitionDeciderV2(graph, agents)
+        partitions = graphPartitionDeciderV2.partitonV2(0.6, 0.2)
+        self.givenPartition(partitions)
