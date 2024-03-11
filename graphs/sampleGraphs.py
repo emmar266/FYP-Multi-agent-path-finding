@@ -86,12 +86,39 @@ graph.setStaticObstacle(
         [0,15],[1,15],[2,15],[3,15],[4,15],[5,15],[6,15]
         ])
 
+agent1 = agent(1,[12,3],[3,3])#purple
+agent2 = agent(2,[15,7],[8,1])#green
+agent3 = agent(3,[9,8],[7,4])#orange
+agent4 = agent(4,[14,4],[0,6]) #blue
+agent5 = agent(5,[4,10],[15,15])#yellow
+agent6 = agent(6,[0,12],[10,15])#red
+agent7 = agent(7,[14,12],[3,14])#dark green
+agentsv1 = [agent1,agent2,agent3,agent4,agent5,agent6,agent7]
+
+
+agent1 = agent(1,[9,15],[8,0])#orange
+agent2 = agent(2,[10,15],[9,0])#blue
+agent3 = agent(3,[12,5],[0,5])#red
+agent4 = agent(4,[15,8],[0,8]) #green
+agent5 = agent(5,[0,12],[9,12])#peach
+agentsv2 = [agent1,agent2,agent3,agent4,agent5]
+
+
+agent1 = agent(1,[7,15],[7,0])#blue
+agent2 = agent(2,[12,2],[14,15])#orange
+agent3 = agent(3,[15,15],[0,4])#magenta
+agent4 = agent(4,[15,8],[0,8]) #green
+agent5 = agent(5,[10,12],[2,13])#brown
+agentsv3 = [agent1,agent2,agent3,agent4,agent5]
+
+
+
 #2
 graph = warehouseFloor(16,16)
 graphm = graphManger(graph)
 graph.setStaticObstacle(
     [
-    [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],
+    [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[12,0],
     [0,1],[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[7,1],[12,1],[13,1],
     [0,2],[1,2],[2,2],[3,2],[4,2],[5,2],[6,2],[9,2],[10,2],[10,2],[11,2],[12,2],[13,2],
     [0,3],[1,3],[2,3],[9,3],[10,3],[10,3],[11,3],[12,3],[13,3],
@@ -108,6 +135,21 @@ graph.setStaticObstacle(
     [0,15],[1,15],[2,15],[3,15],[4,15],[5,15],[6,15],[7,15],[8,15],[10,15],[11,15],[12,15],[13,15],[14,15],[15,15]
 
         ])
+
+agent1 = agent(1,[9,10],[11,0])#red
+agent2 = agent(2,[3,3],[15,11])#magenta
+agent3 = agent(3,[1,5],[12,10])#pink
+agent4 = agent(4,[15,0],[9,15]) #green
+agentsv1 = [agent1,agent2,agent3,agent4]
+
+
+agent1 = agent(1,[11,0],[11,14])#green
+agent2 = agent(2,[9,10],[14,0])#orange
+agent3 = agent(3,[15,0],[3,15])#blue
+agent4 = agent(4,[0,11],[8,3]) #red
+agent5 = agent(5,[3,3],[6,5]) #green pt2
+agent6 = agent(6,[2,6],[15,6])#magenta
+agentsv2 = [agent1,agent2,agent3,agent4]
 
 #3
 graph = warehouseFloor(16,16)

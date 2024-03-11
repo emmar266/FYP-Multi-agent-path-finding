@@ -14,7 +14,7 @@ class reservedAreaBufferArea:
             constraints[agent.agentId] = ConstraintsStructure(agent.agentId, paths)
         return constraints
 
-
+    #need to check if this is a dynamic buffer
     def addBufferConstraints(self,constraints):
         initialLengthOfConstraints = len(constraints)
         i = 0
@@ -33,7 +33,7 @@ class reservedAreaBufferArea:
         constraints = self.setupInitialConstraintsCBS(reservedPaths)
         bufferedConstraints = self.addBufferConstraints(constraints)
         cbsAlgo =highLevel(self.graph.graph,self.agents)
-        cbsAlgo.cbs(bufferedConstraints)
+        return cbsAlgo.cbs(bufferedConstraints)
 
     #should have a dynamic obj with buffer for PP
     #def
