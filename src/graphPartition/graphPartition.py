@@ -1,6 +1,7 @@
 from src.setupGrid import graphManger
 from src.cbs.cbs import highLevel
-from src.graphPartition.graphPartitionDecider import graphPartitionDeciderV1,graphPartitionDeciderV2
+from src.graphPartition.graphPartitionDecider.deciderV1 import graphPartitionDeciderV1
+from src.graphPartition.graphPartitionDecider.deciderV2 import graphPartitionDeciderV2
 
 class graphPartition:
 
@@ -55,5 +56,5 @@ class graphPartition:
 
     def getPartitionsV2(self,agents,graph):
         partitionDecider = graphPartitionDeciderV2(graph, agents)
-        partitions = graphPartitionDeciderV2.partitonV2(0.6, 0.2)
+        partitions = partitionDecider.partitonV2(0.6, 0.2)
         self.givenPartition(partitions)

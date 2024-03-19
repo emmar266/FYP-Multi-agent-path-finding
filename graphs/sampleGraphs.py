@@ -149,7 +149,7 @@ agent3 = agent(3,[15,0],[3,15])#blue
 agent4 = agent(4,[0,11],[8,3]) #red
 agent5 = agent(5,[3,3],[6,5]) #green pt2
 agent6 = agent(6,[2,6],[15,6])#magenta
-agentsv2 = [agent1,agent2,agent3,agent4]
+agentsv2 = [agent1,agent2,agent3,agent4,agent5, agent6]
 
 #3
 graph = warehouseFloor(16,16)
@@ -173,6 +173,27 @@ graph.setStaticObstacle(
         [0,15],[11,15],[12,15],[13,15],[14,15],[15,15]
         ])
 
+#1
+agent1 = agent(1,[0,3],[0,0])#blue
+agent2 = agent(2,[3,0],[15,0])#green
+agent3 = agent(3,[13,7],[6,3])#orange
+agent4 = agent(4,[11,1],[0,7]) #magenta
+agent5 = agent(5,[15,9],[1,15])#red
+agentsv1 = [agent1,agent2,agent3,agent4,agent5]
+
+#2
+agent1 = agent(1,[10,15],[0,1])#magenta
+agent2 = agent(2,[6,0],[15,0])#purple
+agent3 = agent(3,[15,9],[14,3])#red
+agent4 = agent(4,[9,3],[10,8]) #dark blue
+agent5 = agent(5,[0,3],[3,5]) #green
+agent6 = agent(6,[7,15],[0,7])#yellow
+agent7 = agent(7,[4,15],[12,10])#pink
+agent8 = agent(8,[0,11],[9,11])#orange
+agent9 = agent(9,[1,15],[15,12])#light Blue
+agentsv2 = [agent1,agent2,agent3,agent4,agent5, agent6,agent7, agent8,agent9]
+
+
 #4
 graph = warehouseFloor(16,16)
 graphm = graphManger(graph)
@@ -190,6 +211,25 @@ graph.setStaticObstacle(
 
 
         ])
+#1
+agent1 = agent(1,[8,10],[0,3])#magenta
+agent2 = agent(2,[6,15],[7,1])#light blue
+agent3 = agent(3,[7,4],[15,0])#orange
+agent4 = agent(4,[7,10],[0,15]) #light green
+agent5 = agent(5,[15,13],[5,13])#purple
+agentsv1 = [agent1,agent2,agent3,agent4,agent5]
+
+#3 - not finished
+agent1 = agent(1,[10,15],[0,1])#magenta
+agent2 = agent(2,[6,0],[15,0])#purple
+agent3 = agent(3,[15,9],[14,3])#red
+agent4 = agent(4,[9,3],[10,8]) #dark blue
+agent5 = agent(5,[0,3],[3,5]) #green
+agent6 = agent(6,[7,15],[0,7])#yellow
+agent7 = agent(7,[4,15],[12,10])#pink
+agent8 = agent(8,[0,11],[9,11])#orange
+agent9 = agent(9,[1,15],[15,12])#light Blue
+agentsv2 = [agent1,agent2,agent3,agent4,agent5, agent6,agent7, agent8,agent9]
 
 
 #32x32 no static objects
@@ -218,6 +258,22 @@ graph.setStaticObstacle(
 
     [0,30],[1,30],[2,30],[3,30],[4,30],[5,30],[6,30],[7,30],[8,30],[18,30],[19,30],[20,30],[21,30],[22,30],[23,30],[24,30]
         ])
+
+#32x322
+graph = warehouseFloor(32,32)
+graphm = graphManger(graph)
+graph.setStaticObstacle(
+    [
+        [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[23,0],[24,0],[25,0],[26,0],[30,0],[31,0],
+        [0,1],[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[7,1],[8,1],[9,1],[23,1],[24,1],[25,1],[26,1],[30,1],[31,1],
+        [0,2],[1,2],[2,2],[3,2],[4,2],[5,2],[6,2],[7,2],    [12,2],[13,2],[14,2],[15,2],[16,2],[17,2],[18,2],[19,2],[23,2],[24,2],[25,2],[26,2],
+        [0,3],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3],  [11,3],[12,3],[13,3],[14,3],[15,3],[16,3],[17,3],[18,3],[19,3],[23,3],[24,3],[25,3],[26,3],[27,3],
+        [0,4],[1,4],[2,4],[3,4],[4,4],[5,3],   [10,4],[11,4],[12,4],[13,4],[14,4],[15,4],[16,4],[17,4],[18,4],[24,4],[25,4],[26,4],[27,4],[28,4],
+        [0,5],[1,5],[2,5],  [8,5],[9,5],[10,5],[11,5],[12,5],[13,5],[14,5],[15,5],[16,5],[17,5],[25,5],[26,5],[27,5],[28,5],
+        [0,6],[1,6],[2,6],  [6,6],[7,6],[8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[14,6],[15,6],[16,6],[17,6],[25,6],[26,6],[27,6],[28,6],[29,6],
+        [6,7],[7,7],[8,7],[9,7],[10,7],[11,7],
+    ]
+)
 
 #64x64 no static objects
 graph = warehouseFloor(8,8)
