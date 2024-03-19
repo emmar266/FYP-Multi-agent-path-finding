@@ -21,7 +21,7 @@ class prioritisedPlanning:
     def getPathsOnPriority(self, initialConstraints=[]):
         paths = {}
         atLeastOnePathNotFound = False
-        currentConstraints = []
+        currentConstraints = initialConstraints
         previousLongestPath = 0
         for currentAgent in self.agents:
             if previousLongestPath == 0:

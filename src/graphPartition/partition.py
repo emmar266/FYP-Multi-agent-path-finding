@@ -30,18 +30,18 @@ class Partition:
     # i.e there should not be a case where once built it needs to be rebuilt
     def buildPartiion(self,originalGraph):
         #need to build the matrix based on the dimensions found
-        self.partitionGraph = warehouseFloor((self.maxX- self.minX), (self.maxY - self.minY),"Blocked")
+        self.partitionGraph = warehouseFloor((self.maxX- self.minX+1), (self.maxY - self.minY+1),"Blocked")
 
         #in theory i should mark every node in this new graph as blocked and then unblock it as necessary
         for subgraph in self.subGraphs:
             #need to get the current value in reference to the original graph
             for j in range(subgraph.bottomY - subgraph.topY+1):
                 currentYPosOriginal = subgraph.topY + j
-                currentYPos = j
+                currentYPos = abs(self.minY - subgraph.topY) +j
                 for i in range( subgraph.rightX-subgraph.leftX+1):
                     #check if the value in the original graph is blocked or not
                     currentXPosOriginal = subgraph.leftX +i
-                    currentXPos = i
+                    currentXPos = (subgraph.leftX - self.minX) +i
                     if originalGraph.floorPlan[currentYPosOriginal][currentXPosOriginal] != "Blocked":
                         self.partitionGraph.floorPlan[currentYPos][currentXPos] = 0
 
@@ -49,7 +49,12 @@ class Partition:
     def checkIfInPartition(self,step):
         #check if in min max range
         if self.minX <= step[0] <= self.maxX and self.minY <= step[1] <= self.maxY:
-            if self.partitionGraph.floorPlan[step[1]][step[0]] == "Blocked":
+            #the step coordinates are for original graph need to scale to partition graph
+            x = step[0] - self.minX
+            y = step[1] - self.minY
+            if x <0 or y <0:
+              return True
+            elif self.partitionGraph.floorPlan[y][x] == "Blocked":
                 #not in partition
                 return False
         return True
@@ -58,11 +63,14 @@ class Partition:
     def mergeOldGraph(self,newGraph, oldminX,oldminY,oldmaxX, oldmaxY ):
         indMinX = abs(oldminX - self.minX)
         indMinY = abs(self.minY - oldminY)
-        for index,row in self.partitionGraph.floorPlan:
-            for index2,item in row:
-                newGraph.floorPlan[indMinY][indMinX] == self.partitionGraph.floorPlan[index2][index]
-                indMinX+= 1
-            indMinY +=1
+        currentX = indMinX
+        currentY = indMinY
+        for index,row in enumerate(self.partitionGraph.floorPlan):
+            for index2,item in enumerate(row):
+                newGraph.floorPlan[currentY][currentX] = item
+                currentX+= 1
+            currentY +=1
+            currentX = indMinX
         return newGraph
 
 
@@ -80,10 +88,13 @@ class Partition:
             self.maxY = toAdd.maxY
 
 
-        newGraph = warehouseFloor((self.maxX- self.minX), (self.maxY - self.minY),"Blocked")
+        newGraph = warehouseFloor((self.maxX- self.minX+1), (self.maxY - self.minY+1),"Blocked")
         newGraph = self.mergeOldGraph(newGraph, oldminX,oldminY,oldmaxX, oldmaxY)
         for path in toAdd.pathsToIncorporate:
-            newGraph.floorPlan[self.minY - path[1]][self.minX - path[0]] = 0
+            for step in path:
+                x = step[0] -self.minX
+                y = step[1]- self.minY
+                newGraph.floorPlan[y][x] = 0
 
         self.partitionGraph = newGraph
 

@@ -112,19 +112,3 @@ class aStar:
     def calculateHeurisitic(self, goal, currentNode):
         return abs(currentNode.x - goal[0]) + abs(currentNode.y - goal[1])
 
-
-"""
-elif self.atGoal(neighbour,agent.goal):
-    delayPathEnd -= 1
-    #want to encourage the agent to stay at this position until it cannot anymore
-    #need to check if this will
-    delayNode = copy.deepcopy(currentNode)
-    delayNode.time += 1
-    if [delayNode.x,delayNode.y,delayNode.time] not in constraints:
-        delayNode.movementCost = 0
-        delayNode.totalCost =
-        break
-        #don't want ot consider any other neighbouring nodes at this point
-        #might need to reconsider this logic
-
-"""
