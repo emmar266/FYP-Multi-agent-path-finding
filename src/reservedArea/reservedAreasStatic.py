@@ -3,6 +3,7 @@ from src.cbs.cbs import highLevel
 from src.reservedArea.reservedAgentsDecider import reservedAgentDecider,RAAttemptOne,RAAttemptTwo,RAattemptThree
 from src.pp.prioritised import prioritisedPlanning
 from src.pathObj import Paths
+import time
 
 class reservedAreasStatic:
     def __init__(self,graph, agents):
@@ -14,20 +15,45 @@ class reservedAreasStatic:
     #tested works
     def reservedAreaDeciderVersionOne(self,numRA):
         reservedAgentDecider = RAAttemptTwo(self.graph.graph,self.agents)
+        start = time.time()
         potentialAgents = reservedAgentDecider.attemptTwo(numRA)
-        raAgents =reservedAgentDecider.findCompatibleRaRandom(list(potentialAgents.keys()), numRA)
-        return self.staticCBS(raAgents,potentialAgents)
+        if len(potentialAgents)>0:
+            raAgents =reservedAgentDecider.findCompatibleRaRandom(list(potentialAgents.keys()), numRA)
+            end = time.time()
+            print("DeciderTime = ", end - start)
+            return self.staticCBS(raAgents,potentialAgents)
+        else:
+            print("noRa")
+            end = time.time()
+            print("DeciderTime = ", end - start)
+            return self.staticCBS([],[])
     #tested works
     def reservedAreaDeciderVersionOne2(self,numRA):
         reservedAgentDecider = RAAttemptTwo(self.graph.graph,self.agents)
+        start = time.time()
         potentialAgents = reservedAgentDecider.attemptTwo(numRA)
+        end = time.time()
+        print("DeciderTime = ", end -start)
         raAgents =reservedAgentDecider.findCompatibleRA(list(potentialAgents.keys()),numRA)
-        return self.staticCBS(raAgents,potentialAgents)
+        start = time.time()
+        paths = self.staticCBS(raAgents,potentialAgents)
+        end = time.time()
+        print("CBS run = ", end -start)
+        return paths
 
     def reservedAreaDeciderVersionTwo(self,numRA):
         reservedAgentDecider = RAattemptThree(self.graph.graph,self.agents)
+        start = time.time()
         raAgents, paths = reservedAgentDecider.attemptThree(numRA)
-        return self.staticCBS(raAgents,paths)
+        end = time.time()
+        print("DeciderTime = ", end -start)
+        if len(raAgents) ==0:
+            print("noRa")
+        start = time.time()
+        paths = self.staticCBS(raAgents,paths)
+        end = time.time()
+        print("CBS run = ", end -start)
+        return paths
 
     def convertPathToConstraintsStatic(self,paths):
         dynamic = []

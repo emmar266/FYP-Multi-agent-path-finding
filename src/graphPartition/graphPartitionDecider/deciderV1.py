@@ -14,7 +14,7 @@ class graphPartitionDeciderV1(graphPartitionDecider):
        aStarObj = aStar(graphM)
        paths = {}
        for agent in self.agents:
-           path = aStarObj.findPath([], agent, self.initialGraph.width * self.initialGraph.length)
+           path = aStarObj.findPath([], agent)
            paths[agent] = path
        self.initialPaths = Paths(paths)
        self.initialPaths.makePathAsList()
@@ -50,7 +50,7 @@ class graphPartitionDeciderV1(graphPartitionDecider):
             for step in path:
                 nodes[tuple(step)] += 1
             count += len(path)
-        popularityThres = count * popularityPercentage
+        popularityThres =  popularityPercentage
         freqVisited = [key for key, count in nodes.items() if count > popularityThres]
         return freqVisited
 
@@ -75,7 +75,7 @@ class graphPartitionDeciderV1(graphPartitionDecider):
                     nodes[tuple(step)] += 1
                 self.addTimeRange(step, additionalTimeNode,timeRange)
             count += len(path)
-        popularityThres = count * popularityPercentage
+        popularityThres = popularityPercentage
         freqVisited = [key for key, count in nodes.items() if count > popularityThres]
         return freqVisited
 

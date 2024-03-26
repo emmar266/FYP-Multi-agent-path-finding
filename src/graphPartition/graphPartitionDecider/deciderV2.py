@@ -22,6 +22,7 @@ class graphPartitionDeciderV2(graphPartitionDecider):
         #partialCovering going to keep track of agents that are partially in one partition
         partialCovering = {}
         for agent in self.agents:
+            assigned = False
             for partition in partitions:
                 # check if start location is within partition
 
@@ -29,19 +30,22 @@ class graphPartitionDeciderV2(graphPartitionDecider):
                     if partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[
                         1] <= partition.maxY:
                         #can assign to partition
+                        assigned = True
                         self.dictAssign(partition, agentAssignment, agent)
                     else:
+                        assigned = True
                         self.dictAssign("None",agentAssignment, agent)
                         self.dictAssign(partition, partialCovering, agent)
                         break
                 elif partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[
                             1] <= partition.maxY:
                     #can't be assigned to any other complete partition if partially in another
+                    assigned = True
                     self.dictAssign("None", agentAssignment, agent)
                     self.dictAssign(agent, partialCovering, partition)
                     break
-                else:
-                    self.dictAssign("None", agentAssignment, agent)
+            if assigned is False:
+                self.dictAssign("None", agentAssignment, agent)
         return agentAssignment, partialCovering
 
     #One issue i have is that by potentially extending the graph I'll have to call buildPartition twice which may not be ideal?
@@ -84,7 +88,8 @@ class graphPartitionDeciderV2(graphPartitionDecider):
                 #extend partition
                 if extend:
                     if coverings[agent][0] in toExtend:
-                        toExtend[coverings[agent][0]].addPathToContension(path, minX,maxX, minY, maxY)
+                        val = toExtend[coverings[agent][0]][0]
+                        toExtend[coverings[agent][0]][0].addPathToContension(path, minX,maxX, minY, maxY)
                     else:
                         toAdd = partitionExtension()
                         toAdd.addPathToContension(path, minX,maxX, minY, maxY)

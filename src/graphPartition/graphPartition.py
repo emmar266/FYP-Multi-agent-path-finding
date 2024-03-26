@@ -8,11 +8,14 @@ class graphPartition:
 
     #initially gonna just code the part where partitions are given and agents within said partition are given
     #Cbs
-    def givenPartition(self,graphs, agentsPerGraph):
+    def givenPartition(self,originalGraph,graphs, agentsPerGraph):
         pathsPerPartition = {}
         for index,graph in enumerate(graphs):
-            algo = highLevel(graph,agentsPerGraph[index])
-            pathsPerPartition[index] = algo.cbs()
+            if index in agentsPerGraph:
+                algo = highLevel(graph,agentsPerGraph[index])
+                pathsPerPartition[index] = algo.cbs()
+        algo = highLevel(originalGraph, agentsPerGraph["None"])
+        pathsPerPartition["None"] = algo.cbs()
         return pathsPerPartition
 
     def dictAssign(self, key, dict,toAdd):
@@ -26,21 +29,25 @@ class graphPartition:
     def assignAgentsToPartition(self, partitions,agents):
         agentAssignment = {}
         for agent in agents:
+            assigned = False
             for partition in partitions:
                 # check if start location is within partition
                 if partition.minX <= agent.startPos[0] <= partition.maxX and partition.minY <= agent.startPos[1] <= partition.maxY:
-                    if partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[
-                        1] <= partition.maxY:
+                    if partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[1] <= partition.maxY:
                         #can assign to partition
+                        assigned = True
                         self.dictAssign(partition, agentAssignment, agent)
                     else:
+                        assigned = True
                         self.dictAssign("None",agentAssignment, agent)
                         break
-                elif partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[
-                            1] <= partition.maxY:
+                elif partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[1] <= partition.maxY:
                     #can't be assigned to any other complete partition if partially in another
+                    assigned = True
                     self.dictAssign("None", agentAssignment, agent)
                     break
+            if assigned is False:
+                self.dictAssign("None", agentAssignment, agent)
         return agentAssignment
 
                 # check if end location is within partition
@@ -48,13 +55,14 @@ class graphPartition:
                 #no partitions intersect at this point
 
 
-    def getPartitionsV1(self,agents,graph):
+    def getPartitionsV1(self,agents,graph,popPercent,bufferRatio):
         partitionDecider = graphPartitionDeciderV1(graph, agents)
-        partitions = partitionDecider.graphAnalysis(0.6, 0.2 )
+        partitions = partitionDecider.graphAnalysis(popPercent, bufferRatio )
         agentAssigned = self.assignAgentsToPartition(partitions, agents)
-        self.givenPartition(partitions, agentAssigned)
+        self.givenPartition(graph,partitions, agentAssigned)
 
-    def getPartitionsV2(self,agents,graph):
+    def getPartitionsV2(self,agents,graph,popPercent,bufferRatio):
         partitionDecider = graphPartitionDeciderV2(graph, agents)
-        partitions = partitionDecider.partitonV2(0.6, 0.2)
-        self.givenPartition(partitions)
+        partitions = partitionDecider.partitonV2(popPercent, bufferRatio)
+        agentAssigned = self.assignAgentsToPartition(partitions, agents)
+        self.givenPartition(graph,partitions, agentAssigned)
