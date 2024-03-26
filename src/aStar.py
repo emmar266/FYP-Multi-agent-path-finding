@@ -32,7 +32,7 @@ class aStar:
         self.getValidNeighbours = graph.findValidNeighbours
 
 
-    def findPath(self, constraints, agent, previousLongestPath, delayPathEndUntil=0):
+    def findPath(self, constraints, agent, previousLongestPath=0, delayPathEndUntil=0):
         # return path
         startPos = agent.startPos
         nodeCameFrom = {}
@@ -51,7 +51,7 @@ class aStar:
 
         currentTime = 0
 
-        while openPQ.qsize() != 0 and currentTime < 2 * (previousLongestPath + self.areaOfGraph):
+        while openPQ.qsize() != 0 and currentTime <self.areaOfGraph:
             currentNode = openPQ.get()  # need to remove from closed set rn
             openSet.remove(currentNode)
 

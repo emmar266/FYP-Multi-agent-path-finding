@@ -10,7 +10,9 @@ class ReservedAreasExperiments:
     def classicCBS(self,agents,graph):
         algo = highLevel(graph, agents)
         start = time.time()
-        algo.cbs()
+        a =algo.cbs()
+        if a is False:
+            print(False)
         end = time.time()
         return end - start
 

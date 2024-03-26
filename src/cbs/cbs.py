@@ -9,9 +9,7 @@ ToDo:
 When generating paths for all agents should have some sort of way to reuse paths with no new constraints applied
 Change openSet datastructure more heap based - set in python uses hashtable
 
-
-Need to know how we deal with nodes that don't return valid paths - do we try repair the path or just abandon it 
-    - I would assume we abandon that node 
+ 
 """
 
 

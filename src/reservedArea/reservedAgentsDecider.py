@@ -47,7 +47,7 @@ class reservedAgentDecider:
         aStarObj = aStar(graphM)
         paths = {}
         for agent in self.agents:
-            paths[agent] = aStarObj.findPath([], agent, self.graph.width * self.graph.length)
+            paths[agent] = aStarObj.findPath([], agent)
         #Create Path object and create
         paths = Paths(paths)
         paths.makePathAsList()
@@ -86,7 +86,7 @@ class RAAttemptOne(reservedAgentDecider):
             tempGraph.setStaticObstacle(constraints)
             graphM = graphManger(tempGraph)
             aStarObj = aStar(graphM)
-            path = aStarObj.findPath([], potentialRA,self.graph.width * self.graph.length)
+            path = aStarObj.findPath([], potentialRA)
             if path is not False:
                 potentialAgent[potentialRA] = path
         return potentialAgent
@@ -116,7 +116,7 @@ class RAAttemptTwo(reservedAgentDecider):
                     graphM = graphManger(tempGraph)
                     aStarObj = aStar(graphM)
                     # need to regenerate path with ra as static obstacle
-                    possiblePath = aStarObj.findPath([], self.agents[index], self.graph.width * self.graph.length)
+                    possiblePath = aStarObj.findPath([], self.agents[index])
                     if possiblePath is False:
                         # Not a possible reserved agent
                         agentPossible = False
@@ -189,7 +189,7 @@ class RAattemptThree(reservedAgentDecider):
         graphM = graphManger(tempGraph)
         aStarObj = aStar(graphM)
         for unreserved in agentsToCheck:
-            path = aStarObj.findPath([],unreserved,self.graph.width * self.graph.length)
+            path = aStarObj.findPath([],unreserved)
             if path is False:
                 return False
         return True
@@ -234,5 +234,5 @@ class RAattemptThree(reservedAgentDecider):
                 # check if those can plan there path around those in possibleCompa
                 if self.checkIfAgentsHaveValidPath(current, toCheck):
                     return current, self.initalPaths.pathWithoutTime
-        return False
+        return [],[]
 
