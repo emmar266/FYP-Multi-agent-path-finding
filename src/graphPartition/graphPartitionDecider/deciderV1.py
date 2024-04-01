@@ -51,7 +51,7 @@ class graphPartitionDeciderV1(graphPartitionDecider):
                 nodes[tuple(step)] += 1
             count += len(path)
         popularityThres =  popularityPercentage
-        freqVisited = [key for key, count in nodes.items() if count > popularityThres]
+        freqVisited = [key for key, count in nodes.items() if count >= popularityThres]
         return freqVisited
 
 
@@ -96,7 +96,7 @@ class graphPartitionDeciderV1(graphPartitionDecider):
     #should also put a restriction on how small a partition can exist within the graph
     def graphAnalysis(self, popularityPercentage, bufferRatio):
         self.getInitialPaths()
-        freqVisited = self.buildHeatMapV2(popularityPercentage, 4)
+        freqVisited = self.buildHeatMapV1(popularityPercentage)
         existingPartitions = []
         xBuffer, yBuffer = bufferRatio, bufferRatio
         for popVal in freqVisited:

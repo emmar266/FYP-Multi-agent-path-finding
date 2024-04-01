@@ -199,5 +199,5 @@ class highLevel:
             if paths[agent] is False:
                 return False
             elif len(paths[agent]) > previousLongestPath:
-                previousLongestPath = len(paths)
+                previousLongestPath = len(paths[agent])
         return paths

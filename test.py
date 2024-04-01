@@ -2,6 +2,7 @@ from src.setupGrid import warehouseFloor, graphManger
 from src.agent import agent
 from Experiments.RAExperiments import ReservedAreasExperiments
 import copy
+import sys
 
 graph = warehouseFloor(16,16)
 graphm = graphManger(graph)
@@ -20,10 +21,12 @@ try:
     tempGraph = copy.deepcopy(graph)
     print("time", v1.classicCBS(agents1,tempGraph))
     print("---------------------------------")
-    print("1 ra",v1.staticRaCBSV1(agents1,tempGraph,1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 ra",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents1,tempGraph,1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
 except Exception as e:
     print(e)
 
@@ -49,13 +52,16 @@ try:
     tempGraph = copy.deepcopy(graph)
     print("Time",v1.classicCBS(agents2,tempGraph))
     print("---------------------------------")
-    print("1 rav1",v1.staticRaCBSV1(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents2, tempGraph,2))
+    tempAgents = copy.deepcopy(agents2)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph,2))
 
 except Exception as e:
     print(e)
@@ -79,7 +85,7 @@ agent12 = agent(12, [7,9],[5,2])#light blue
 agent13 = agent(13,[0,5], [2,15])#dark green
 agent14 = agent(14,[15,12],[4,15])#grey
 #agent15 = agent(15, [4,10], [15,7])#yellow
-agents3 = [agent1,agent2,agent3, agent6, agent7,agent8, agent9,agent11,]
+agents3 = [agent1,agent2,agent3, agent6, agent7,agent13, agent12,agent13]
 
 print("######################################################")
 print("Blank 16x16 12 agents")
@@ -87,16 +93,20 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents3,graph))
     print("---------------------------------")
-    print("1 rav1",v1.staticRaCBSV1(agents3,tempGraph,1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents3,tempGraph,1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents3, tempGraph,2))
+    tempAgents = copy.deepcopy(agents3)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph,2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents3, tempGraph,3))
+    tempAgents = copy.deepcopy(agents3)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph,3))
 except Exception as e:
     print(e)
 print("######################################################")
@@ -136,10 +146,12 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents1, graph))
     print("---------------------------------")
-    print("1 rav1",v1.staticRaCBSV1(agents1,tempGraph,1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents1,tempGraph,1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
 
 except Exception as e:
     print(e)
@@ -163,13 +175,16 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents2, graph))
     print("---------------------------------")
-    print("1 rav1",v1.staticRaCBSV1(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
     print("---------------------------------")
     tempGraph = copy.deepcopy(graph)
-    print("2 rav2",v1.staticRaCBSV2(agents2,tempGraph,2))
+    tempAgents = copy.deepcopy(agents2)
+    print("2 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,2))
 except Exception as e:
     print(e)
 
@@ -200,13 +215,16 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents3, graph))
     print("---------------------------------")
-    print("1 rav1",v1.staticRaCBSV1(agents3,tempGraph,1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents3,tempGraph,1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
     print("---------------------------------")
     tempGraph = copy.deepcopy(graph)
-    print("2 rav2",v1.staticRaCBSV2(agents3,tempGraph,2))
+    tempAgents = copy.deepcopy(agents3)
+    print("2 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,2))
 except Exception as e:
     print(e)
 print("######################################################")
@@ -241,18 +259,19 @@ agent2 = agent(2, [7,3],[12,14]) #red
 agent3 = agent(3, [0,4],[9,3])#blue
 agent4= agent(4,[3,9],[15,4])#pink
 #agent5 = agent(5,[7,15],[0,15])#light green
-agents1 = [agent1,agent2,agent3,]
+agents1 = [agent1,agent2,agent3]
 print("######################################################")
 print("16x16 60% 4agents")
 try:
     tempGraph = copy.deepcopy(graph)
-
+    tempAgents = copy.deepcopy(agents1)
     print(v1.classicCBS(agents1, graph))
     print("---------------------------------") 
-    print("1 rav1",v1.staticRaCBSV1(agents1,tempGraph,1))
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents1,tempGraph,1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
 except Exception as e:
     print(e)
 print("#######################################################")
@@ -276,13 +295,16 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents2,graph))
     print("---------------------------------")
-    print("1 rav1",v1.staticRaCBSV1(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2",v1.staticRaCBSV2(agents2,tempGraph,2))
+    tempAgents = copy.deepcopy(agents2)
+    print("2 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,2))
 except Exception as e:
     print(e)
 print("######################################################")
@@ -301,17 +323,19 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents3, graph))
     print("---------------------------------")
-    print("1 rav1",v1.staticRaCBSV1(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav1",v1.staticRaCBSV1(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2",v1.staticRaCBSV2(agents2,tempGraph,1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2",v1.staticRaCBSV2(agents2,tempGraph,2))
+    tempAgents = copy.deepcopy(agents3)
+    print("2 rav2",v1.staticRaCBSV2(tempAgents,tempGraph,2))
 except Exception as e:
     print(e)
 print("######################################################")
-
 
 #32x32 blank
 graph = warehouseFloor(32,32)
@@ -341,20 +365,24 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents1, graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents1, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents1, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents1, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents1)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents1, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents1)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
 except Exception as e:
     print(e)
 print("######################################################")
-
+sys.stdout.flush()
 agent16 = agent(16,[17,16], [2,16])
 agent17 = agent(17,[14,3],[23,5])
 agent18 = agent(18,[22,16],[21,31])
@@ -379,26 +407,32 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents2, graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents2, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents2, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents2, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents2)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents2, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents2)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("4 rav2", v1.staticRaCBSV2(agents2, tempGraph, 4))
+    tempAgents = copy.deepcopy(agents2)
+    #print("4 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 4))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("5 rav2", v1.staticRaCBSV2(agents2, tempGraph, 5))
+    #tempAgents = copy.deepcopy(agents2)
+    #print("5 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 5))
 except Exception as e:
     print(e)
 print("######################################################")
-
+sys.stdout.flush()
 agent31 = agent(31,[9,7],[17,12])
 agent32 = agent(32, [14,14],[20,14])
 agent33 = agent(33,[21,10],[21,3])
@@ -424,28 +458,34 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents3, graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents3, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents3, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents3, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents3)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents3, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents3)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("4 rav2", v1.staticRaCBSV2(agents3, tempGraph, 4))
+    tempAgents = copy.deepcopy(agents3)
+    #print("4 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 4))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("5 rav2", v1.staticRaCBSV2(agents3, tempGraph, 5))
+    tempAgents = copy.deepcopy(agents3)
+    #print("5 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 5))
 
 except Exception as e:
     print(e)
 print("######################################################")
-# 32x32 40%
-
+# 32x32 40%"""
+sys.stdout.flush()
 graph = warehouseFloor(32,32)
 graphm = graphManger(graph)
 graph.setStaticObstacle(
@@ -503,26 +543,32 @@ agent14 = agent(14, [28,3], [29,11])
 agent15 = agent(15, [2,4],[0,11])
 agents1 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10]
 print("######################################################")
+
+"""
 print("32x32 40% 15agents")
 try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents1,graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents1, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents1, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents1, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents1)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents1, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents1)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
 except Exception as e:
     print(e)
 print("######################################################")
-
-
+sys.stdout.flush()
+"""
 
 agent16 = agent(16, [31,17],[0,17])
 agent17 = agent(17, [26,25],[18,21])
@@ -540,35 +586,42 @@ agent28 = agent(28, [24,31],[26,26])
 agent29 = agent(29, [17,29],[30,31])
 agent30 = agent(30, [27,21],[31,28])
 
-agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent11,agent12,agent13,agent14, agent15,
-           agent16, agent17,agent18, agent19, agent20
+agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent13,agent14, agent15,
+           agent16, agent17,agent18, agent19, agent20, agent21, agent22
            ]
+"""
 print("######################################################")
 print("32x32 40% 30 agents")
 try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents2,graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents2, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents2, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents2, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents2)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents2, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents2)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("4 rav2", v1.staticRaCBSV2(agents2, tempGraph, 4))
+    tempAgents = copy.deepcopy(agents2)
+    #print("4 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 4))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("5 rav2", v1.staticRaCBSV2(agents2, tempGraph, 5))
+    #tempAgents = copy.deepcopy(agents2)
+    #print("5 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 5))
 except Exception as e:
     print(e)
-print("######################################################")
-
+print("######################################################")"""
+sys.stdout.flush()
 agent31 = agent(31, [29,25],[30,21])
 agent32 = agent(32, [17,23],[25,21])
 agent33 = agent(33, [22,14],[31,14])
@@ -584,36 +637,43 @@ agent42 = agent(42, [6,21],[6,28])
 agent43 = agent(43,[8,28],[21,29])
 agent44 = agent(44,[29,28], [23,17])
 agent45 = agent(45, [21,22], [12,23])
-agents3 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent11,agent12,agent13,agent14, agent15,
-           agent16, agent17, agent18,agent19, agent20, agent21, agent22, agent23, agent24, agent25, agent26, agent27, agent28, agent29, agent30
+agents3 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent13,agent14, agent15,
+           agent16, agent17,agent18, agent19, agent20, agent21, agent22, agent23, agent24,agent25, agent26, agent27, agent28, agent32, agent33, agent34,agent25
           
            ]
 print("######################################################")
 print("32x32 40% 45 agents")
+"""
 try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents3,graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents3, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents3, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents3, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents3)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents3, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents3)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("4 rav2", v1.staticRaCBSV2(agents3, tempGraph, 4))
+    tempAgents = copy.deepcopy(agents3)
+    #print("4 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 4))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("5 rav2", v1.staticRaCBSV2(agents3, tempGraph, 5))
+    tempAgents = copy.deepcopy(agents3)
+    #print("5 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 5))
 except Exception as e:
     print(e)
-print("######################################################")"""
-
+print("######################################################")
+sys.stdout.flush()"""
 #32x32 60%
 graph = warehouseFloor(32,32)
 graphm = graphManger(graph)
@@ -671,26 +731,31 @@ agent15 = agent(15, [20,28],[10,23])
 agents1 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10]
 print("######################################################")
 print("32x32 60% 15agents")
+sys.stdout.flush()
 """
 try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents1, graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents1, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents1, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents1)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents1, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents1)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents1, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents1)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
 except Exception as e:
     print(e)
 print("######################################################")
+sys.stdout.flush()
 """
-
 agent16 = agent(16, [13,9],[5,9])
 agent17 = agent(17, [22,17],[12,17])
 agent18 = agent(18, [0,17],[12,23])
@@ -707,38 +772,44 @@ agent28 = agent(28, [14, 26],[15,21])
 agent29 = agent(29, [10,17],[2,16])
 agent30 = agent(30, [6,9],[4,5])
 
-agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10 ,agent23,agent22, agent24, agent25, agent26, agent27,
-           agent28,agent29, agent30,agent19
+agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent11, agent12 ,agent14, agent15,
+           agent16, agent17, agent19, agent18, agent22, agent23
 
-           ]
+      ]
+"""
 print("######################################################")
 print("32x32 60% 30agents")
 try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents2, graph))
     print("---------------------------------")
-   # print("1 rav1", v1.staticRaCBSV1(agents2, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-#print("1 rav2", v1.staticRaCBSV2(agents2, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents2)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents2, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents2)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     print("---------------------------------")
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents2, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents2)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("4 rav2", v1.staticRaCBSV2(agents2, tempGraph, 4))
+    tempAgents = copy.deepcopy(agents2)
+    #print("4 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 4))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("5 rav2", v1.staticRaCBSV2(agents2, tempGraph, 5))
+    tempAgents = copy.deepcopy(agents2)
+    #print("5 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 5))
 except Exception as e:
     print(e)
 print("######################################################")
-
-
+sys.stdout.flush()"""
 agent31 = agent(31, [16,2],[29,3])
 agent32 = agent(32, [4,12],[5,18])
 agent33 = agent(33, [29,20],[19,22])
@@ -755,8 +826,8 @@ agent43 = agent(43, [15,8],[30,2])
 agent44 =agent(44, [17,0],[18,4])
 agent45 = agent(45, [6,16],[5,10])
 
-agents3 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10 ,agent23,agent22, agent24, agent25, agent26, agent27,
-           agent28,agent29, agent30
+agents3 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent11, agent12 ,agent14, agent15,
+           agent16, agent17, agent19, agent18, agent22, agent23, agent24, agent25, agent28, agent29,agent30, agent31, agent34, agent35
            
            ]
 print("######################################################")
@@ -765,28 +836,32 @@ try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents3, graph))
     print("---------------------------------")
-    print("1 rav1", v1.staticRaCBSV1(agents3, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav1", v1.staticRaCBSV1(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("1 rav2", v1.staticRaCBSV2(agents3, tempGraph, 1))
+    tempAgents = copy.deepcopy(agents3)
+    print("1 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 1))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("2 rav2", v1.staticRaCBSV2(agents3, tempGraph, 2))
+    tempAgents = copy.deepcopy(agents3)
+    print("2 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 2))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("3 rav2", v1.staticRaCBSV2(agents3, tempGraph, 3))
+    tempAgents = copy.deepcopy(agents3)
+    print("3 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 3))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("4 rav2", v1.staticRaCBSV2(agents3, tempGraph, 4))
+    tempAgents = copy.deepcopy(agents3)
+    #print("4 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 4))
     tempGraph = copy.deepcopy(graph)
     print("---------------------------------")
-    print("5 rav2", v1.staticRaCBSV2(agents3, tempGraph, 5))
+    tempAgents = copy.deepcopy(agents3)
+    #print("5 rav2", v1.staticRaCBSV2(tempAgents, tempGraph, 5))
 except Exception as e:
     print(e)
 print("######################################################")
 
-
-
-
+sys.stdout.flush()
 
 

@@ -21,12 +21,20 @@ class reservedAreasStatic:
             raAgents =reservedAgentDecider.findCompatibleRaRandom(list(potentialAgents.keys()), numRA)
             end = time.time()
             print("DeciderTime = ", end - start)
-            return self.staticCBS(raAgents,potentialAgents)
+            start = time.time()
+            paths = self.staticCBS(raAgents, potentialAgents)
+            end =time.time()
+            print("CBS time - ", end - start)
+            return paths
         else:
             print("noRa")
             end = time.time()
             print("DeciderTime = ", end - start)
-            return self.staticCBS([],[])
+            start = time.time()
+            paths = self.staticCBS([], [])
+            end =time.time()
+            print("CBS time - ", end - start)
+            return paths
     #tested works
     def reservedAreaDeciderVersionOne2(self,numRA):
         reservedAgentDecider = RAAttemptTwo(self.graph.graph,self.agents)

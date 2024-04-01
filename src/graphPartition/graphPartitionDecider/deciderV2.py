@@ -17,36 +17,56 @@ class graphPartitionDeciderV2(graphPartitionDecider):
         else:
             dict[key].append(toAdd)
         return dict
-    def assignAgentsToPartition(self, partitions):
+    def checkIfInPartition(self,partition,coordinates):
+        x = coordinates[0] - partition.minX
+        y = coordinates[1] - partition.minY
+        if partition.partitionGraph.floorPlan[y][x] == "Blocked":
+            return False
+        return True
+
+    def changeAgentCoordinates(self,agent, partition):
+        newStart = [agent.startPos[0] - partition.minX, agent.startPos[1] - partition.minY]
+        newGoal = [agent.goal[0] - partition.minX, agent.goal[1] - partition.minY]
+        newAgent = copy.deepcopy(agent)
+        newAgent.startPos = newStart
+        newAgent.goal = newGoal
+        return newAgent
+
+    #Something to be aware of - depending how i deal with areas without a popular spot in my graph partition this may need to be adjusted
+    def assignAgentsToPartition(self, partitions,agents):
         agentAssignment = {}
-        #partialCovering going to keep track of agents that are partially in one partition
-        partialCovering = {}
-        for agent in self.agents:
+        for agent in agents:
             assigned = False
             for partition in partitions:
+                #v = partition.partitionGraph.floorPlan[agent.goal[0]][agent.goal[1]]
                 # check if start location is within partition
-
                 if partition.minX <= agent.startPos[0] <= partition.maxX and partition.minY <= agent.startPos[1] <= partition.maxY:
-                    if partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[
-                        1] <= partition.maxY:
-                        #can assign to partition
+                   if self.checkIfInPartition(partition,agent.startPos):
+
+                        if partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[1] <= partition.maxY:
+                            if self.checkIfInPartition(partition, agent.goal):
+                            #can assign to partition
+                                assigned = True
+
+                                self.dictAssign(partition, agentAssignment,self.changeAgentCoordinates(agent, partition) )
+                            else:
+                                assigned = True
+                                self.dictAssign("None", agentAssignment, agent)
+                                break
+                        else:
+                            assigned = True
+                            self.dictAssign("None",agentAssignment, agent)
+                            break
+                elif partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[1] <= partition.maxY:
+                    if self.checkIfInPartition(partition, agent.goal):
+
+                        #can't be assigned to any other complete partition if partially in another
                         assigned = True
-                        self.dictAssign(partition, agentAssignment, agent)
-                    else:
-                        assigned = True
-                        self.dictAssign("None",agentAssignment, agent)
-                        self.dictAssign(partition, partialCovering, agent)
+                        self.dictAssign("None", agentAssignment, agent)
                         break
-                elif partition.minX <= agent.goal[0] <= partition.maxX and partition.minY <= agent.goal[
-                            1] <= partition.maxY:
-                    #can't be assigned to any other complete partition if partially in another
-                    assigned = True
-                    self.dictAssign("None", agentAssignment, agent)
-                    self.dictAssign(agent, partialCovering, partition)
-                    break
             if assigned is False:
                 self.dictAssign("None", agentAssignment, agent)
-        return agentAssignment, partialCovering
+        return agentAssignment
 
     #One issue i have is that by potentially extending the graph I'll have to call buildPartition twice which may not be ideal?
 
