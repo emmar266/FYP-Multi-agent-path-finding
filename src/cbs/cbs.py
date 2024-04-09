@@ -58,7 +58,8 @@ class highLevel:
     def cbs(self, initialConstraints={}):
 
         # run path finding algo for all paths no constraints - should return list of all paths for each robot/task
-        currentPaths = self.findPathsForAll({})
+
+        currentPaths = self.findPathsForAll(initialConstraints)
         # currentCollisions = self.collsionsFound(currentPaths)
 
         root = node(initialConstraints, self.calculateNodeCost(currentPaths))

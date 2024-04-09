@@ -2,7 +2,7 @@ from src.graphPartition.graphPartitionDecider.decider import graphPartitionDecid
 from src.graphPartition.graphPartitionDecider.deciderV1 import graphPartitionDeciderV1
 from src.aStar import aStar
 from src.setupGrid import graphManger
-
+import copy
 from src.graphPartition.partitionExtension import partitionExtension
 
 class graphPartitionDeciderV2(graphPartitionDecider):
@@ -35,6 +35,7 @@ class graphPartitionDeciderV2(graphPartitionDecider):
     #Something to be aware of - depending how i deal with areas without a popular spot in my graph partition this may need to be adjusted
     def assignAgentsToPartition(self, partitions,agents):
         agentAssignment = {}
+        partialCovering = {}
         for agent in agents:
             assigned = False
             for partition in partitions:
@@ -52,6 +53,7 @@ class graphPartitionDeciderV2(graphPartitionDecider):
                             else:
                                 assigned = True
                                 self.dictAssign("None", agentAssignment, agent)
+                                self.dictAssign( agent, partialCovering,partition)
                                 break
                         else:
                             assigned = True
@@ -63,10 +65,11 @@ class graphPartitionDeciderV2(graphPartitionDecider):
                         #can't be assigned to any other complete partition if partially in another
                         assigned = True
                         self.dictAssign("None", agentAssignment, agent)
+                        self.dictAssign( agent, partialCovering,partition)
                         break
             if assigned is False:
                 self.dictAssign("None", agentAssignment, agent)
-        return agentAssignment
+        return agentAssignment, partialCovering
 
     #One issue i have is that by potentially extending the graph I'll have to call buildPartition twice which may not be ideal?
 
@@ -124,7 +127,7 @@ class graphPartitionDeciderV2(graphPartitionDecider):
     def partitonV2(self,popPercent, bufferPercent):
         partitions = self.initalAnalysis.graphAnalysis(popPercent,bufferPercent)
         self.initialPaths = self.initalAnalysis.initialPaths
-        agents, partialCoverings = self.assignAgentsToPartition(partitions)
+        agents, partialCoverings = self.assignAgentsToPartition(partitions,self.agents)
         #need to remove those agents involved in extension from None in agetns
         toExtend = self.analysePartialCovering(partialCoverings, partitions)
         self.extendPartition(toExtend)

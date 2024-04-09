@@ -1,13 +1,27 @@
 import copy
 
 from src.setupGrid import graphManger
-from src.cbs.cbs import highLevel
+from src.cbs.cbs import highLevel, ConstraintsStructure
 from src.graphPartition.graphPartitionDecider.deciderV1 import graphPartitionDeciderV1
 from src.graphPartition.graphPartitionDecider.deciderV2 import graphPartitionDeciderV2
 import time
 from src.pathObj import Paths
 
 class graphPartition:
+
+    def buildConstraints(self, constraints, agents):
+        constraintStruct = {}
+        for agent in agents:
+            constraints = copy.deepcopy(constraints)
+            constraintStruct[agent.agentId] = ConstraintsStructure(agent.agentId, constraints)
+        return constraintStruct
+
+    def convertPathsToOringinalGraphCoordinates(self, paths, partition):
+        for path in paths.values():
+            for step in path:
+                step.x = partition.minX + step.x
+                step.y = partition.minY + step.y
+
 
 
     #initially gonna just code the part where partitions are given and agents within said partition are given
@@ -18,9 +32,12 @@ class graphPartition:
         longestTime = 0
         for index,graph in enumerate(graphs):
             if graph in agentsPerGraph:
+                print("Agents for partition ", len(agentsPerGraph[graph]))
                 algo = highLevel(graph.partitionGraph,agentsPerGraph[graph])
                 start = time.time()
                 paths = algo.cbs()
+                self.convertPathsToOringinalGraphCoordinates(paths,graph)
+
                 pathsPerPartition.update(paths)
                 end = time.time()
                 if longestTime == 0:
@@ -31,13 +48,27 @@ class graphPartition:
         if "None" in agentsPerGraph:
             pathOBj = Paths(pathsPerPartition)
             pathOBj.makePathAsList()
+            print("Og graph agents ", len(agentsPerGraph["None"]))
             algo = highLevel(originalGraph, agentsPerGraph["None"])
             start = time.time()
-            pathsPerPartition["None"] = algo.cbs(pathOBj.pathAsList)
+            constraints = {}
+            if len(pathOBj.pathAsList) >0:
+                a = list(pathOBj.pathAsList.values())
+                toadd = []
+                for sublist in pathOBj.pathAsList.values():
+                    toadd.extend(sublist)
+                constraints = self.buildConstraints(toadd, agentsPerGraph["None"])
+            pathsPerPartition.update( algo.cbs(constraints))
             end = time.time()
             print("time taken -", longestTime+(end-start))
         else:
             print("time-taken - ", longestTime)
+        count = 0
+        for val in pathsPerPartition:
+            count += len(pathsPerPartition[val])
+            if pathsPerPartition[val] == False:
+                print("False Val found")
+        print("Steps ", count)
         return pathsPerPartition
 
     def dictAssign(self, key, dict,toAdd):
@@ -68,6 +99,8 @@ class graphPartition:
         for agent in agents:
             assigned = False
             for partition in partitions:
+                if assigned:
+                    break
                 #v = partition.partitionGraph.floorPlan[agent.goal[0]][agent.goal[1]]
                 # check if start location is within partition
                 if partition.minX <= agent.startPos[0] <= partition.maxX and partition.minY <= agent.startPos[1] <= partition.maxY:

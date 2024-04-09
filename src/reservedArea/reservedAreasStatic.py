@@ -74,6 +74,7 @@ class reservedAreasStatic:
         agents = self.agents
         for agent in reservedAgents:
             agents.remove(agent)
+            print("ra path ", len(agentPaths[agent]))
             self.graph.graph.setStaticObstacle(agentPaths[agent])
         #run cbs as usual
         cbsAlgo =highLevel(self.graph.graph,agents)

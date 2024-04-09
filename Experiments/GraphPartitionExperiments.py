@@ -23,6 +23,6 @@ class GraphPartitionExperiments:
     def graphPartitionV2(self, agents, graph, popPercent, buffer):
         obj = graphPartition()
         start = time.time()
-        obj.getPartitionsV1(agents, graph,popPercent, buffer)
+        obj.getPartitionsV2(agents, graph,popPercent, buffer)
         end = time.time()
         return end - start
