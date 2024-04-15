@@ -68,6 +68,10 @@ class graphPartition:
             count += len(pathsPerPartition[val])
             if pathsPerPartition[val] == False:
                 print("False Val found")
+            print("agent ", val.agentId)
+            for step in pathsPerPartition[val]:
+                print("("+ str(step.x)+ ","+ str(step.y)+ "),",end="")
+            print("")
         print("Steps ", count)
         return pathsPerPartition
 

@@ -104,7 +104,7 @@ except Exception as e:
 print("######################################################")
 sys.stdout.flush()
 agents3 = [agent1,agent2,agent3, agent6, agent7,agent8, agent9,agent11,agent12,agent13]
-
+"""
 print("######################################################")
 print("Blank 16x16 10 agents")
 try:
@@ -126,7 +126,7 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
-
+"""
 #16x16 40%
 graph = warehouseFloor(16,16)
 graphm = graphManger(graph)
@@ -201,7 +201,7 @@ except Exception as e:
 
 print("######################################################")
 sys.stdout.flush()
-
+"""
 #15 agents
 agent1 = agent(1,[0,0],[13,1])#magenta
 agent2 = agent(2,[15,9],[0,1])#yellow
@@ -371,6 +371,7 @@ except Exception as e:
     print(e)
 print("######################################################")
 sys.stdout.flush()
+"""
 #32x32 blank
 graph = warehouseFloor(32,32)
 graphm = graphManger(graph)
@@ -432,6 +433,7 @@ agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,age
            ]
 print("######################################################")
 print("32x32 blank 30agents")
+"""
 try:
     tempGraph = copy.deepcopy(graph)
     print("Time",v1.classicCBS(agents2,tempGraph))
@@ -448,7 +450,7 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
-
+""""""
 agent31 = agent(31,[9,7],[17,12])
 agent32 = agent(32, [14,14],[20,14])
 agent33 = agent(33,[21,10],[21,3])
@@ -464,7 +466,7 @@ agent42 = agent(42, [18,19],[23,23]) # equivalent to 11 blue
 agent43 = agent(43, [5,14],[15,17])#5
 agent44 = agent(44, [30,20], [24,17]) #14
 agent45 = agent(45, [15,9],[19,5])#18
-agents3 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent11,agent12,agent13,agent14, agent15,
+agents3 = [agent41,agent42,agent43,agent44,agent45, agent6, agent7,agent8, agent9,agent10, agent11,agent12,agent13,agent14, agent15,
            agent16, agent17, agent18, agent19, agent20, agent21, agent22, agent23, agent24, agent25, agent26, agent27, agent28,
            agent31, agent32
            ]
@@ -843,4 +845,4 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
-
+"""
