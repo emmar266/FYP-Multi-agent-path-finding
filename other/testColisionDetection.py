@@ -24,6 +24,14 @@ agent2path = current.findPath([[3,2,4]],agent2)
 constraints = algo.AlternativecheckForcollsions({agent1.agentId:agent1path, agent2.agentId: agent2path})
 print("g")
 """
+agent1 = agent.agent(1,[0,0],[15,9]) # purple
+agent2 = agent.agent(2,[15,5],[0,1])
+graph = setupGrid.warehouseFloor(16,16)
+graph.setStaticObstacle(
+    [
+
+    ]
+)
 
 finalpaths = algo.cbs()
 collisions = algo.AlternativecheckForcollsions(paths)

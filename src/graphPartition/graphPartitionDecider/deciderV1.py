@@ -14,7 +14,7 @@ class graphPartitionDeciderV1(graphPartitionDecider):
        aStarObj = aStar(graphM)
        paths = {}
        for agent in self.agents:
-           path = aStarObj.findPath([], agent, self.initialGraph.width * self.initialGraph.length)
+           path = aStarObj.findPath([], agent)
            paths[agent] = path
        self.initialPaths = Paths(paths)
        self.initialPaths.makePathAsList()
@@ -50,8 +50,8 @@ class graphPartitionDeciderV1(graphPartitionDecider):
             for step in path:
                 nodes[tuple(step)] += 1
             count += len(path)
-        popularityThres = count * popularityPercentage
-        freqVisited = [key for key, count in nodes.items() if count > popularityThres]
+        popularityThres =  popularityPercentage
+        freqVisited = [key for key, count in nodes.items() if count >= popularityThres]
         return freqVisited
 
 
@@ -75,7 +75,7 @@ class graphPartitionDeciderV1(graphPartitionDecider):
                     nodes[tuple(step)] += 1
                 self.addTimeRange(step, additionalTimeNode,timeRange)
             count += len(path)
-        popularityThres = count * popularityPercentage
+        popularityThres = popularityPercentage
         freqVisited = [key for key, count in nodes.items() if count > popularityThres]
         return freqVisited
 
@@ -93,17 +93,15 @@ class graphPartitionDeciderV1(graphPartitionDecider):
 
     # Popularity Percentage - what percentage is considered popular
     # BufferRatio - what percentage of the original graph should be considered for a buffer area
-    #should also put a restriction on how small a partition can exist within the graph
     def graphAnalysis(self, popularityPercentage, bufferRatio):
         self.getInitialPaths()
-        freqVisited = self.buildHeatMapV2(popularityPercentage, 4)
+        freqVisited = self.buildHeatMapV1(popularityPercentage)
         existingPartitions = []
         xBuffer, yBuffer = bufferRatio, bufferRatio
         for popVal in freqVisited:
             left, right, top, bottom = popVal[0] - xBuffer, popVal[0] + xBuffer, popVal[1] - yBuffer, popVal[1] + yBuffer
             left, right, top, bottom = self.checkWithinGraph(left,right,top,bottom)
             currentSub = subGraph(left,right,top,bottom)
-            # need to check if this one intersects with any others if so merge
             toMerge = self.checkIfSubGraphIntersect(currentSub, existingPartitions)
             if len(toMerge) >0 :
                 self.merge(toMerge, currentSub,existingPartitions)

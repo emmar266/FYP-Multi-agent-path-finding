@@ -9,9 +9,7 @@ ToDo:
 When generating paths for all agents should have some sort of way to reuse paths with no new constraints applied
 Change openSet datastructure more heap based - set in python uses hashtable
 
-
-Need to know how we deal with nodes that don't return valid paths - do we try repair the path or just abandon it 
-    - I would assume we abandon that node 
+ 
 """
 
 
@@ -60,9 +58,11 @@ class highLevel:
     def cbs(self, initialConstraints={}):
 
         # run path finding algo for all paths no constraints - should return list of all paths for each robot/task
-        currentPaths = self.findPathsForAll({})
-        # currentCollisions = self.collsionsFound(currentPaths)
 
+        currentPaths = self.findPathsForAll(initialConstraints)
+        # currentCollisions = self.collsionsFound(currentPaths)
+        if currentPaths is False:
+            return False
         root = node(initialConstraints, self.calculateNodeCost(currentPaths))
         root.paths = currentPaths
 
@@ -104,8 +104,9 @@ class highLevel:
                     constraints[agent.agentId] = new #[newConstraint]
                 # run path finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
                 paths = self.findPathsForAll(constraints)
-                if type(paths) == bool:
+                if paths is False:
                     continue
+
                 cost = self.calculateNodeCost(paths)
                 childNode = node(constraints, cost)
                 childNode.paths = paths
@@ -201,5 +202,5 @@ class highLevel:
             if paths[agent] is False:
                 return False
             elif len(paths[agent]) > previousLongestPath:
-                previousLongestPath = len(paths)
+                previousLongestPath = len(paths[agent])
         return paths

@@ -10,7 +10,13 @@ class ReservedAreasExperiments:
     def classicCBS(self,agents,graph):
         algo = highLevel(graph, agents)
         start = time.time()
-        algo.cbs()
+        a =algo.cbs()
+        if a is False:
+            print(False)
+        count = 0
+        for val in a:
+            count += len(a[val])
+        print("cbs step ", count)
         end = time.time()
         return end - start
 
@@ -27,6 +33,10 @@ class ReservedAreasExperiments:
         start = time.time()
         paths = obja.reservedAreaDeciderVersionOne(numreservedAgents)
         end = time.time()
+        count = 0
+        for path in paths:
+            count += len(paths[path])
+        print("RA path length ", count)
         return end - start
 
     def staticRaCBSV1_1(self,agents,graph,numreservedAgents):
@@ -41,6 +51,14 @@ class ReservedAreasExperiments:
         start = time.time()
         paths = obja.reservedAreaDeciderVersionTwo(numreservedAgents)
         end = time.time()
+        count = 0
+        for path in paths:
+            count += len(paths[path])
+            print("agent ", path.agentId)
+            for step in paths[path]:
+                print("(" + str(step.x) + "," + str(step.y) + "),", end="")
+            print("")
+        print("Ra count ", count)
         return end - start
 
     def bufferRaCBS(self,agents,graph,reservedAgents):

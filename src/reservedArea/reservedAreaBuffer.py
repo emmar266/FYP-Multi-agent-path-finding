@@ -73,7 +73,7 @@ class reservedAreaBufferArea:
         constraints = [] # need these to be of type [x,y,t]
         for agent in reservedAgents:
             agents.remove(agent)
-            paths =  aStarObj.findPath(constraints, agent,self.graphArea)
+            paths =  aStarObj.findPath(constraints, agent)
             paths = Paths({1:paths})
             #should add buffer area now
             paths.makePathAsList()
@@ -81,8 +81,9 @@ class reservedAreaBufferArea:
             constraints += paths.pathAsList[1]
             constraints += toadd
         cbsAlgo =highLevel(self.graph.graph,agents)
+        #this need
         finalPaths = cbsAlgo.cbs(constraints)
-        return
+        return finalPaths
 
     def bufferPP(self,reservedAgents):
         aStarObj = aStar(self.graph)
