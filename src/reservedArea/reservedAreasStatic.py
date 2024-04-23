@@ -73,6 +73,10 @@ class reservedAreasStatic:
     def staticCBS(self,reservedAgents, agentPaths):
         agents = self.agents
         for agent in reservedAgents:
+            print("agentid", agent.agentId)
+            for step in agentPaths[agent]:
+                print("(" + str(step[0]) + "," + str(step[1]) + "),", end="")
+            print("")
             agents.remove(agent)
             print("ra path ", len(agentPaths[agent]))
             self.graph.graph.setStaticObstacle(agentPaths[agent])

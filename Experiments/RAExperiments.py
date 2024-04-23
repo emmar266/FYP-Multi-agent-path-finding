@@ -54,6 +54,10 @@ class ReservedAreasExperiments:
         count = 0
         for path in paths:
             count += len(paths[path])
+            print("agent ", path.agentId)
+            for step in paths[path]:
+                print("(" + str(step.x) + "," + str(step.y) + "),", end="")
+            print("")
         print("Ra count ", count)
         return end - start
 

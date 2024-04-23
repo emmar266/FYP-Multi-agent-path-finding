@@ -6,6 +6,7 @@ class partitionExtension:
         self.maxX = None
         self.maxY = None
         self.pathsToIncorporate = []
+        self.agentsToIncorporate = []
 
     def addPathToContension(self,path, minX,maxX, minY, maxY):
         if self.minX is None or self.minX > minX:

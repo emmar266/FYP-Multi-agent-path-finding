@@ -5,7 +5,7 @@ from src.setupGrid import graphManger
 import copy
 from src.graphPartition.partitionExtension import partitionExtension
 
-class graphPartitionDeciderV2(graphPartitionDecider):
+class graphPartitionDeciderV2_1(graphPartitionDecider):
     def __init__(self,graph, agents):
         super().__init__(graph, agents)
         self.initalAnalysis = graphPartitionDeciderV1(graph,agents)
@@ -75,23 +75,27 @@ class graphPartitionDeciderV2(graphPartitionDecider):
     def checkInOtherPartitionExtension(self, currentStep, previousExpansions, timePoint):
         collidings = []
         for partitions in previousExpansions.values():
-            for index,partitionExtension in enumerate(partitions):
-                for path in partitionExtension.pathsToIncorporate:
+            for partitionExtension in partitions:
+                for index,path in enumerate(partitionExtension.pathsToIncorporate):
                     if currentStep in path:
-                        if path.index(currentStep) == timePoint:
-                            collidings.append(partitionExtension.agentsToIncorporate[index])
+                        collidings.append(partitionExtension.agentsToIncorporate[index])
                             #return True
         return collidings
 
 
-    def checkInOtherPartition(self,currentStep,potentialExtension ,partitions):
+    def checkInOtherPartition(self,currentStep,potentialExtension ,partitions,previousExpansions, time):
+        allcollidings = []
         for partition in partitions:
             if potentialExtension == partition:
                 continue
             else:
                 if partition.checkIfInPartition(currentStep):
-                    return True
-        return False
+                    return True, allcollidings
+                collidings = self.checkInOtherPartitionExtension(currentStep, previousExpansions,time+1)
+                if len(collidings) > 0:
+                     allcollidings+= collidings
+                    #return True
+        return False, allcollidings
 
     # if only one partial covering can check if you can extend the partition
     # Should i enforce that it has to be a certain distance from the partition ?
@@ -118,7 +122,10 @@ class graphPartitionDeciderV2(graphPartitionDecider):
                         minY = step[1]
                     if maxY is None or step[1] > maxY:
                         maxY = step[1]
-                    if self.checkInOtherPartition(step,coverings[agent][0], partitions) :
+                    inOtherPartitions, collidings = self.checkInOtherPartition(step,coverings[agent][0], partitions,toExtend, index)
+                    if len(collidings) >0:
+                        currentColldings += collidings
+                    if inOtherPartitions:
                         #not possible to extend
                         extend = False
                         break
@@ -127,12 +134,15 @@ class graphPartitionDeciderV2(graphPartitionDecider):
                     if coverings[agent][0] in toExtend:
                         val = toExtend[coverings[agent][0]][0]
                         toExtend[coverings[agent][0]][0].addPathToContension(path, minX,maxX, minY, maxY)
+                        toExtend[coverings[agent][0]][0].agentsToIncorporate.append(agent)
                     else:
                         toAdd = partitionExtension()
+                        toAdd.agentsToIncorporate.append(agent)
                         toAdd.addPathToContension(path, minX,maxX, minY, maxY)
                         toExtend[coverings[agent][0]] = [toAdd]
+                    extensionCollidings[agent] = list(set(currentColldings))
                 extend = True
-        return toExtend
+        return toExtend, extensionCollidings
 
     def extendPartition(self,toExtend):
         for partition in toExtend:
@@ -143,7 +153,7 @@ class graphPartitionDeciderV2(graphPartitionDecider):
         self.initialPaths = self.initalAnalysis.initialPaths
         agents, partialCoverings = self.assignAgentsToPartition(partitions,self.agents)
         #need to remove those agents involved in extension from None in agetns
-        toExtend = self.analysePartialCovering(partialCoverings, partitions)
+        toExtend, collidings = self.analysePartialCovering(partialCoverings, partitions)
         self.extendPartition(toExtend)
-        return partitions
+        return partitions, collidings
 

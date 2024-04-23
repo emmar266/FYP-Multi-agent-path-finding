@@ -57,7 +57,8 @@ class Partition:
             elif self.partitionGraph.floorPlan[y][x] == "Blocked":
                 #not in partition
                 return False
-        return True
+            return True
+        return False
 
 
     def mergeOldGraph(self,newGraph, oldminX,oldminY,oldmaxX, oldmaxY ):

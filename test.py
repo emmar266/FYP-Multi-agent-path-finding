@@ -18,21 +18,20 @@ agent4 = agent(4, [15, 8], [0, 9])  # green
 agents1 = [agent1, agent2, agent3]
 v1 = ReservedAreasExperiments()
 g1 = GraphPartitionExperiments()
-
-try:
-    tempGraph = copy.deepcopy(graph)
-    print("time", v1.classicCBS(agents1,tempGraph))
-    print("V1 pop 2 buf 1-----------------------------------------")
-    tempAgents = copy.deepcopy(agents1)
-    print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
-    print("V2 pop 2 buf 1-----------------------------------------")
-    tempAgents = copy.deepcopy(agents1)
-    print(g1.graphPartitionV2(tempAgents,graph,2,1 ))
-except Exception as e:
-    print(e)
+"""
+#try:
+tempGraph = copy.deepcopy(graph)
+print("time", v1.classicCBS(agents1,tempGraph))
+print("V1 pop 2 buf 1-----------------------------------------")
+tempAgents = copy.deepcopy(agents1)
+print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
+print("V2 pop 2 buf 1-----------------------------------------")
+tempAgents = copy.deepcopy(agents1)
+print(g1.graphPartitionV2(tempAgents,graph,2,1 ))
+#except Exception as e:
+#    print(e)
 sys.stdout.flush()
 print("######################################################")
-
 
 #10
 agent1 = agent(1,[0,0],[15,9]) # purple
@@ -48,7 +47,6 @@ agent9 = agent(9, [1,7],[4,8])#pastel green
 agents2 = [agent1,agent2,agent3, agent6, agent7]
 print("######################################################")
 print("Blank 16x16 5 agents")
-
 try:
     tempGraph = copy.deepcopy(graph)
     print("Time",v1.classicCBS(agents2,tempGraph))
@@ -104,7 +102,7 @@ except Exception as e:
 print("######################################################")
 sys.stdout.flush()
 agents3 = [agent1,agent2,agent3, agent6, agent7,agent8, agent9,agent11,agent12,agent13]
-"""
+
 print("######################################################")
 print("Blank 16x16 10 agents")
 try:
@@ -126,7 +124,7 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
-"""
+
 #16x16 40%
 graph = warehouseFloor(16,16)
 graphm = graphManger(graph)
@@ -201,7 +199,7 @@ except Exception as e:
 
 print("######################################################")
 sys.stdout.flush()
-"""
+
 #15 agents
 agent1 = agent(1,[0,0],[13,1])#magenta
 agent2 = agent(2,[15,9],[0,1])#yellow
@@ -396,6 +394,7 @@ agents1 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,age
 
 print("######################################################")
 print("32x32 blank 15 agents")
+"""
 try:
     tempGraph = copy.deepcopy(graph)
     print(v1.classicCBS(agents1,graph))
@@ -411,8 +410,9 @@ try:
     print("---------------------------------")
 except Exception as e:
     print(e)
+"""
 print("######################################################")
-
+sys.stdout.flush()
 agent16 = agent(16,[17,16], [2,16])
 agent17 = agent(17,[14,3],[23,5])
 agent18 = agent(18,[22,16],[21,31])
@@ -433,24 +433,25 @@ agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,age
            ]
 print("######################################################")
 print("32x32 blank 30agents")
+
 """
-try:
-    tempGraph = copy.deepcopy(graph)
-    print("Time",v1.classicCBS(agents2,tempGraph))
-    print(" v1 pop2 buf1---------------------------------")
-    tempAgents = copy.deepcopy(agents2)
-    print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
-    print("v2 pop2 buf1---------------------------------")
-    tempAgents = copy.deepcopy(agents2)
-    print(g1.graphPartitionV2(tempAgents,graph,2,1 ))
-    print("v2 - pop2 buf2---------------------------------")
-    tempAgents = copy.deepcopy(agents2)
-    print(g1.graphPartitionV2(tempAgents,graph, 2,2))
-    print("---------------------------------")
-except Exception as e:
-    print(e)
+tempGraph = copy.deepcopy(graph)
+print("Time",v1.classicCBS(agents2,tempGraph))
+print(" v1 pop2 buf1---------------------------------")
+tempAgents = copy.deepcopy(agents2)
+print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
+print("v2 pop2 buf1---------------------------------")
+tempAgents = copy.deepcopy(agents2)
+print(g1.graphPartitionV2(tempAgents,graph,2,1 ))
+print("v2 - pop2 buf2---------------------------------")
+tempAgents = copy.deepcopy(agents2)
+#print(g1.graphPartitionV2(tempAgents,graph, 2,2))
+print("---------------------------------")
+"""
+#print(e)
 print("######################################################")
-""""""
+
+sys.stdout.flush()
 agent31 = agent(31,[9,7],[17,12])
 agent32 = agent(32, [14,14],[20,14])
 agent33 = agent(33,[21,10],[21,3])
@@ -466,35 +467,34 @@ agent42 = agent(42, [18,19],[23,23]) # equivalent to 11 blue
 agent43 = agent(43, [5,14],[15,17])#5
 agent44 = agent(44, [30,20], [24,17]) #14
 agent45 = agent(45, [15,9],[19,5])#18
-agents3 = [agent41,agent42,agent43,agent44,agent45, agent6, agent7,agent8, agent9,agent10, agent11,agent12,agent13,agent14, agent15,
-           agent16, agent17, agent18, agent19, agent20, agent21, agent22, agent23, agent24, agent25, agent26, agent27, agent28,
-           agent31, agent32
+agents3 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10, agent11,agent12,agent13,agent14, agent15,
+            agent16, agent17, agent18,agent19, agent20,  agent21, agent22, agent23, agent24, agent25, agent26, agent27
            ]
 print("######################################################")
-print("32x32 blank 45agents")
-try:
-    tempGraph = copy.deepcopy(graph)
-    tempGraph = copy.deepcopy(graph)
-    print(v1.classicCBS(agents3,graph))
-    print("v1 pop2 buf1---------------------------------")
-    tempAgents = copy.deepcopy(agents3)
-    print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
-    print("v1 pop2 buf2---------------------------------")
-    tempAgents = copy.deepcopy(agents3)
-    print(g1.graphPartitionV1(tempAgents,graph,2,2 ))
-    print("v2 - pop 2 buf1---------------------------------")
-    tempAgents = copy.deepcopy(agents3)
-    print(g1.graphPartitionV2(tempAgents,graph, 2,1))
-    print("v2 - pop2 buf2---------------------------------")
-    tempAgents = copy.deepcopy(agents3)
-    print(g1.graphPartitionV2(tempAgents,graph, 2,2))
-    print("---------------------------------")
+"""
 
-except Exception as e:
-    print(e)
+print("32x32 blank 45agents")
+tempGraph = copy.deepcopy(graph)
+print(v1.classicCBS(agents3,graph))
+print("v1 pop2 buf1---------------------------------")
+tempAgents = copy.deepcopy(agents3)
+print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
+print("v1 pop2 buf2---------------------------------")
+#tempAgents = copy.deepcopy(agents3)
+#print(g1.graphPartitionV1(tempAgents,graph,2,2 ))
+print("v2 - pop 2 buf1---------------------------------")
+tempAgents = copy.deepcopy(agents3)
+print(g1.graphPartitionV2(tempAgents,graph, 2,1))
+print("v2 - pop2 buf2---------------------------------")
+tempAgents = copy.deepcopy(agents3)
+print(g1.graphPartitionV2(tempAgents,graph, 2,2))
+print("---------------------------------")
+"""
+sys.stdout.flush()
+"""
 print("######################################################")
 # 32x32 40%
-
+"""
 graph = warehouseFloor(32,32)
 graphm = graphManger(graph)
 graph.setStaticObstacle(
@@ -553,6 +553,7 @@ agent15 = agent(15, [2,4],[0,11])
 agents1 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,agent10]
 print("######################################################")
 print("32x32 40% 15agents")
+"""
 try:
     tempGraph = copy.deepcopy(graph)
     print("Time",v1.classicCBS(agents1,tempGraph))
@@ -569,8 +570,8 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
-
-
+"""
+sys.stdout.flush()
 
 agent16 = agent(16, [31,17],[0,17])
 agent17 = agent(17, [26,25],[18,21])
@@ -592,7 +593,9 @@ agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,age
            agent16, agent17,agent18, agent19, agent20
            ]
 print("######################################################")
+
 print("32x32 40% 30 agents")
+"""    """
 try:
     tempGraph = copy.deepcopy(graph)
     print("Time",v1.classicCBS(agents2,tempGraph))
@@ -608,8 +611,10 @@ try:
     print("---------------------------------")
 except Exception as e:
     print(e)
-print("######################################################")
 
+""""""
+print("######################################################")
+sys.stdout.flush()
 agent31 = agent(31, [29,25],[30,21])
 agent32 = agent(32, [17,23],[25,21])
 agent33 = agent(33, [22,14],[31,14])
@@ -650,6 +655,7 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
+sys.stdout.flush()
 
 # 32x32 60%
 graph = warehouseFloor(32, 32)
@@ -757,7 +763,7 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
-
+sys.stdout.flush()
 agent16 = agent(16, [13, 9], [5, 9])
 agent17 = agent(17, [22, 17], [12, 17])
 agent18 = agent(18, [0, 17], [12, 23])
@@ -781,27 +787,26 @@ agents2 = [agent1,agent2,agent3,agent4,agent5, agent6, agent7,agent8, agent9,age
            ]
 print("######################################################")
 print("32x32 60% 30agents")
-try:
-    tempGraph = copy.deepcopy(graph)
-    print(v1.classicCBS(agents2,graph))
-    print("v1- pop2 buf1--------------------------------")
-    tempAgents = copy.deepcopy(agents2)
-    print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
-    print("v1 pop2 buf2---------------------------------")
-    tempAgents = copy.deepcopy(agents2)
-    print(g1.graphPartitionV1(tempAgents,graph,2,2 ))
-    print("v2 -pop2  buf1---------------------------------")
-    tempAgents = copy.deepcopy(agents2)
-    print(g1.graphPartitionV2(tempAgents,graph, 2,1))
-    print("v2 - pop2 buf2---------------------------------")
-    tempAgents = copy.deepcopy(agents2)
-    print(g1.graphPartitionV2(tempAgents,graph, 2,2))
-    print("---------------------------------")
 
-except Exception as e:
-    print(e)
+tempGraph = copy.deepcopy(graph)
+print(v1.classicCBS(agents2,graph))
+print("v1- pop2 buf1--------------------------------")
+tempAgents = copy.deepcopy(agents2)
+print(g1.graphPartitionV1(tempAgents,graph,2,1 ))
+print("v1 pop2 buf2---------------------------------")
+tempAgents = copy.deepcopy(agents2)
+print(g1.graphPartitionV1(tempAgents,graph,2,2 ))
+print("v2 -pop2  buf1---------------------------------")
+tempAgents = copy.deepcopy(agents2)
+print(g1.graphPartitionV2(tempAgents,graph, 2,1))
+print("v2 - pop2 buf2---------------------------------")
+tempAgents = copy.deepcopy(agents2)
+print(g1.graphPartitionV2(tempAgents,graph, 2,2))
+print("---------------------------------")
+
+
 print("######################################################")
-
+sys.stdout.flush()
 agent31 = agent(31, [16, 2], [29, 3])
 agent32 = agent(32, [4, 12], [5, 18])
 agent33 = agent(33, [29, 20], [19, 22])
@@ -845,4 +850,4 @@ try:
 except Exception as e:
     print(e)
 print("######################################################")
-"""
+sys.stdout.flush()

@@ -85,7 +85,7 @@ agent12 = agent(12, [7,9],[5,2])#light blue
 agent13 = agent(13,[0,5], [2,15])#dark green
 agent14 = agent(14,[15,12],[4,15])#grey
 #agent15 = agent(15, [4,10], [15,7])#yellow
-agents3 = [agent1,agent2,agent3, agent6, agent7,agent13, agent12,agent13]
+agents3 = [agent1,agent2,agent3, agent6, agent7,agent13, agent12,agent8]
 
 print("######################################################")
 print("Blank 16x16 12 agents")

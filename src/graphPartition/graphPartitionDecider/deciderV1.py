@@ -93,7 +93,6 @@ class graphPartitionDeciderV1(graphPartitionDecider):
 
     # Popularity Percentage - what percentage is considered popular
     # BufferRatio - what percentage of the original graph should be considered for a buffer area
-    #should also put a restriction on how small a partition can exist within the graph
     def graphAnalysis(self, popularityPercentage, bufferRatio):
         self.getInitialPaths()
         freqVisited = self.buildHeatMapV1(popularityPercentage)
@@ -103,7 +102,6 @@ class graphPartitionDeciderV1(graphPartitionDecider):
             left, right, top, bottom = popVal[0] - xBuffer, popVal[0] + xBuffer, popVal[1] - yBuffer, popVal[1] + yBuffer
             left, right, top, bottom = self.checkWithinGraph(left,right,top,bottom)
             currentSub = subGraph(left,right,top,bottom)
-            # need to check if this one intersects with any others if so merge
             toMerge = self.checkIfSubGraphIntersect(currentSub, existingPartitions)
             if len(toMerge) >0 :
                 self.merge(toMerge, currentSub,existingPartitions)

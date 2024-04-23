@@ -61,7 +61,8 @@ class highLevel:
 
         currentPaths = self.findPathsForAll(initialConstraints)
         # currentCollisions = self.collsionsFound(currentPaths)
-
+        if currentPaths is False:
+            return False
         root = node(initialConstraints, self.calculateNodeCost(currentPaths))
         root.paths = currentPaths
 
@@ -103,8 +104,9 @@ class highLevel:
                     constraints[agent.agentId] = new #[newConstraint]
                 # run path finding - only need to run it for at most 4 agents, but only twice if theres only 2 agents involved in the collision
                 paths = self.findPathsForAll(constraints)
-                if type(paths) == bool:
+                if paths is False:
                     continue
+
                 cost = self.calculateNodeCost(paths)
                 childNode = node(constraints, cost)
                 childNode.paths = paths
